@@ -1,0 +1,26 @@
+project:
+  type: book
+  output-dir: ../CPAT_ai_documentation_html
+
+book:
+  title: "CPAT Excel-AI"
+  favicon: ./00/media/image1.png
+  search: true
+  reader-mode: true
+  page-footer: "CPAT-AI: WB-IMF Climate Policy Assessment Tool. Documentation release 1.3 (2026-11-01): Excel-AI Mitigation and Master 1.3.1, Distribution 0.5.1, Coded CPAT 1.1.0p1.4, data edition Public01"
+  chapters:
+    - index.qmd
+    - 01_Overview.qmd
+    - 02_Mitigation_Prototype.qmd
+    - 03_Other_Modules.qmd
+    - 04_Data_and_Working.qmd
+
+format:
+  html:
+    toc-depth: 4
+    toc-location: left
+    toc-title: "***Chapter Contents***"
+    number-depth: 3
+    theme: cosmo
+
+editor: source

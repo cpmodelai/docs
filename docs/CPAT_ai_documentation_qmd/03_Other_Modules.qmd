@@ -1,0 +1,37 @@
+# Other modules {#sec-modules}
+
+The mitigation module is the integrated model. Two further modules are standalone workbooks that take their inputs from it: the distribution module and the air-pollution module. Like Mitigation they have no macros: the Master workbook activates them into `excel_ai/active_workbooks/` and carries values between them (@sec-workbooks).
+
+## Distribution module
+
+The distribution module (version 0.5.1, on its own 0.x version line; `excel_ai/distribution/CPAT-AI-Distribution_latest.xlsx`, activated as `excel_ai/active_workbooks/CPAT-AI-Distribution_latest.xlsb`; every version in `excel_ai/distribution/releases/`) computes the household effects by decile of a mitigation scenario: price changes, budget shares, direct and indirect effects, revenue recycling and welfare. Its method is explained in the CPAT-AI Model tab ([Distribution](../CPAT_model_documentation_html/08_Distribution.html)).
+
+**One copy of the formulas.** The mitigation workbook does not hold the Distribution tab. The module is cut from a full build of the mitigation builder (`CPAT_WITH_DIST=1`): its tabs `Cover` (with the Master's status), `Scenarios` (distribution rows shown), `FromMitigation`, `Distribution`, `Settings`, `Mappings` and the distribution data tabs. To change a formula, change the mitigation builder, then rebuild Mitigation and the module.
+
+**One input tab.** Its only input from Mitigation is the tab `FromMitigation`: the values of the mitigation export block (section 11, block 11a, defined name `ExportDistn`; blue band), in the Mitigation column layout. The Master's *Update Distribution from Mitigation* copies them from the activated mitigation workbook into the activated distribution workbook, by code (it stops if the rows do not match, for example two different versions), recalculates and saves it. The module runs one scenario at a time: the policy scenario of Mitigation group 2.
+
+**Build and check.**
+
+```
+cd excel_ai/distribution
+python build_distribution.py    # the module, about 4 minutes
+python check_distribution.py    # about 4 minutes
+```
+
+The check confirms that the Distribution tab equals a full build of the mitigation builder cell for cell, that `FromMitigation` equals block 11a through the macro's row mapping, that no formula reads a dropped tab or an undefined name, and, end to end, that a carbon price changed in Mitigation and carried over by the update gives the same Distribution.
+
+## Air-pollution module
+
+The air-pollution module (`excel_ai/air_pollution/`) is a standalone rebuild of the Air Pollution module of legacy CPAT 1.0pre_459. It starts from the pollutant emissions produced by Mitigation (section 15, the export to the air pollution module, blue band) and does not recalculate fuel use or emissions.
+
+**Boundary.** The inputs are the baseline and policy emission series keyed by the codes `aps.<pollutant>.<sector>`, with year, country, unit, scenario and source traceability. In legacy 459 the handoff is `country.mit.em.<pollutant>.<sector>.<scenario>` in tonnes per year; the current Mitigation outputs are in kt, so units are converted explicitly at the boundary. Once the input block is filled, the workbook runs without links to another workbook.
+
+**Scope.** The module reproduces the calculations and options of legacy 459: emissions to concentrations, exposure and health burden, and economic outputs, for baseline and policy scenarios and their difference. Fuel externalities are reported as outputs only and are not fed back into Mitigation prices.
+
+**Status.** The current workbook holds the scaffold: Cover, Data Sources, Mitigation Inputs and the nine public reference tables extracted from legacy 459 (the `ap459_*` tables of `data/Public01/tidy/`). The calculations, unit conversion, outputs and the numerical regression are open. The first regression case is Senegal, the country selected in the legacy NoPropData dashboard.
+
+**Validation.** Each selected output is compared with legacy 459 by scenario and year, and every difference is classified as a confirmed bug fix, a replicated issue, or unresolved. Numerical equivalence is not claimed until the selected country has populated, reproducible inputs.
+
+## Road transport co-benefits
+
+The mitigation module reads the road-transport co-benefits as values typed on its tab `FromTrans`, as it reads the air-pollution marginal damages on `FromAP` (both typed for Egypt only: 0 for other countries, and row 1 of each tab says whether it has rows for the country). Mitigation's section 18 reads both; they feed the Pigouvian components and the welfare of section 19. Section 5 (the engineer road model) holds the outputs the transport co-benefits module will read. A standalone transport co-benefits module is planned to supply the values.

@@ -1,0 +1,16 @@
+# CPAT Methodology {.unnumbered #book-home}
+
+<style>#book-home > h1 { display: none; }</style>
+
+The methodology of the Climate Policy Assessment Tool (CPAT), the World Bank-IMF model for a rapid assessment of climate mitigation policies in more than 180 countries: its models, data sources, key assumptions and caveats. Written by the CPAT team (2023); errors found since by the CPAT-AI project are corrected in place and listed in [Corrections](08_Corrections.qmd).
+
+| Chapter | What it covers |
+|---|---|
+| [1 User guide](01_User_Guide.qmd) | The climate policies in CPAT, quick start, the tabs, country coverage, parameters |
+| [2 Summary](02_Summary.qmd) | The approach and its applications |
+| [3 Mitigation](03_Mitigation.qmd) | Prices, energy demand, power, emissions, revenues, welfare: the core model |
+| [4 Multipliers](04_Multipliers.qmd) | GDP effects of revenue use |
+| [5 Distribution](05_Distribution.qmd) | Effects on households by decile |
+| [6 Air pollution](06_Air_pollution.qmd) | Concentrations, health and their costs |
+| [7 Road transport](07_Road_Transport.qmd) | Road transport in the mitigation module (the elasticity and engineer road models: fleet, electric vehicles, fuel use) and the transport co-benefits module (vehicle use, congestion, accidents, road damage) |
+| [8 Corrections](08_Corrections.qmd) | The errors corrected in this edition, and the version history |
