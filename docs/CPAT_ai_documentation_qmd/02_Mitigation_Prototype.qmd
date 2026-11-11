@@ -96,7 +96,7 @@ Each scenario is a group of columns: group 1 the baseline (scenario 1), group 2 
 | 18 | Inputs from air pollution and transport co-benefits: the damages per unit of fuel read from `FromAP` and `FromTrans` | Revenues, GDP and welfare |
 | 19 | Welfare and externalities: climate damages, efficiency costs, co-benefits, efficient prices and their cost components | Revenues, GDP and welfare |
 
-The method of each block, with its equations and pseudocode, is in the website's **CPAT-AI Model** tab (<https://cpmodelai.github.io/cpat_ai/#model>; sources `docs/CPAT_model_documentation_qmd/`), shared with CPAT Python. The notes in `excel_ai/mitigation/docs/methods/` are the workbook-side detail: rows, names and checks.
+The method of each block, with its equations and pseudocode, is in the website's **CPAT-AI Model** tab (<https://cpmodelai.github.io/docs/#model>; sources `docs/CPAT_model_documentation_qmd/`), shared with CPAT Python. The notes in `excel_ai/mitigation/docs/methods/` are the workbook-side detail: rows, names and checks.
 
 ### Policies (section 2)
 

@@ -10,7 +10,7 @@ A short, human-readable orientation to the cpat_ai repository, mostly about the 
 
 Paths are relative to the repository root. Files named `_v<version>` carry the current version (today 1.9.11 for Mitigation, the unified CPAT and the MT, 0.6.5 for Distribution; the bug book and the tracker carry the version of the Mitigation release they were made with); older versions are kept with their module (`releases/` folders).
 
-**The website** <https://cpmodelai.github.io/cpat_ai/> has a home page and four tabs: Methodology (`#methodology`, the CPAT methodology), CPAT-AI Model (`#model`, the method of every block, shared by Excel-AI and Python), CPAT Excel-AI (`#excel-ai`, the Excel prototypes) and CPAT Python (`#python`, the Python model). Offline: `docs/index.html`.
+**The website** <https://cpmodelai.github.io/docs/> has a home page and four tabs: Methodology (`#methodology`, the CPAT methodology), CPAT-AI Model (`#model`, the method of every block, shared by Excel-AI and Python), CPAT Excel-AI (`#excel-ai`, the Excel prototypes) and CPAT Python (`#python`, the Python model). Offline: `docs/index.html`.
 
 ## Human-readable documents
 
@@ -203,7 +203,7 @@ Getting set up and a short guide to git are in `other/SetupGuide.docx`. In short
 # 9. Further information
 
 - Folder map: `README.md` (root) and `excel_ai/README.md`; each module folder has its own README.
-- Documentation: the website <https://cpmodelai.github.io/cpat_ai/> (sources in `docs/`).
+- Documentation: the website <https://cpmodelai.github.io/docs/> (sources in `docs/`).
 - How-to guides: the setup and tools guide `other/SetupGuide.docx`; the quick start in the mitigation Documentation; the data editions and scripts in `data/README.md`; module guides and prompts in `excel_ai/core/prompts/`.
 - Supporting material in `other/`: research papers, decks (`other/presentations/`), distribution notes and earlier prototypes.
 - Plans: `excel_ai/core/plans/` (e.g. `Modules.md` for the modular design).

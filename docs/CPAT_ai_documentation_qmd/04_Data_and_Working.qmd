@@ -85,7 +85,7 @@ A methodology describes the method as it is now, for a reader who has never seen
 
 | Folder | Contents |
 |---|---|
-| `docs/index.html` | The website ([https://cpmodelai.github.io/cpat_ai/](https://cpmodelai.github.io/cpat_ai/)): Home, then four tabs: Methodology (`#methodology`), CPAT-AI Model (`#model`, the model shared by Excel-AI and Python), CPAT Excel-AI (`#excel-ai`, this book) and CPAT Python (`#python`) |
+| `docs/index.html` | The website ([https://cpmodelai.github.io/docs/](https://cpmodelai.github.io/docs/)): Home, then four tabs: Methodology (`#methodology`), CPAT-AI Model (`#model`, the model shared by Excel-AI and Python), CPAT Excel-AI (`#excel-ai`, this book) and CPAT Python (`#python`) |
 | `docs/presentations/` | The latest version of each slide deck, numbered, as `<nn>_<Name>_latest.pptx` (permalinks) |
 | `docs/CPAT_full_documentation_qmd/`, `docs/CPAT_full_documentation_html/` | The methodology (CPAT documentation): Quarto sources and built pages |
 | `docs/CPAT_ai_documentation_qmd/`, `docs/CPAT_ai_documentation_html/` | This documentation: Quarto sources and built pages |
