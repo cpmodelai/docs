@@ -29,11 +29,10 @@ Paths are relative to the repository root. Files named `_v<version>` carry the c
 
 | **Deck** | **What it is for** |
 |---|---|
-| `docs/presentations/06_CPAT-AI_Consolidated_latest.pptx` | **Start here.** The consolidated CPAT-AI deck: terms, what it is and its status, what it does better than CPAT 1.0, bugs and issues found, the rules, the data, the documentation, how to use, develop and collaborate. |
-| `docs/presentations/earlier_versions/01_CPAT-AI_Overview_latest.pptx` | Earlier (1.8.1) overview deck, replaced by the consolidated deck: status, how to use the prototype, results. |
-| `docs/presentations/earlier_versions/04_CPAT-AI_Pitch_latest.pptx` | Earlier (1.8.1) short pitch, replaced by the consolidated deck. |
-| `docs/presentations/earlier_versions/05_CPAT-AI_Setup_latest.pptx` | Earlier (1.8.1) setup deck, replaced by the consolidated deck. |
-| `coded/cpat_documentation/Coded-CPAT_Overview_v<version>.pptx` | The Coded CPAT (Python) deck. |
+| `docs/presentations/01_CPAT-AI_UserGuide_latest.pptx` | **Start here.** The user guide: the repository, the latest CPAT, developing with Claude and GitHub Copilot, pushing and pulling, bugs, issues and norms, example prompts. |
+| `docs/presentations/02_CPAT-AI_Excel_latest.pptx` | CPAT-AI Excel: the pitch and a guide to the 2.0 interface and its dashboards. |
+| `docs/presentations/03_CPAT-AI_Python_latest.pptx` | CPAT-AI Python (Coded CPAT): status, how it works, testing, the app. |
+| `docs/presentations/archive/` | The earlier decks (consolidated, overview, pitch, setup, Coded CPAT, AI climate-fiscal tools), retired 2026-11-17. |
 | `other/presentations/AIClimate-FiscalTools_v2.6.pptx` | The overarching deck on the team's AI climate-fiscal tools, CPAT-AI among them. |
 
 ## Computer-readable files
@@ -166,7 +165,7 @@ To raise a bug or issue: add it to the tracker (or ask the AI to register it). I
 
 - **Bugs vs issues** (section 0): as above. When in doubt, treat it as an issue, replicate it and ask.
 - **Never improve legacy silently:** newer data or a better method is an upgrade (U) for the team to decide, e.g. a new population source.
-- **Versions** (section 5): never edit a released workbook; build the next version. Workbooks are `<Name>_v<version>` in the module's `releases/`, e.g. `CPAT-AI-Mitigation_v1.5.1.xlsx` (to 1.1.0: `CPAT-AI-Mitigation-Prototype_v1.1.0.xlsm`).
+- **Versions** (section 5): never edit a released workbook; build the next version. Workbooks are `<Name>_v<version>` in the module's `releases/`, e.g. `CPAT-AI-Mitigation_v1.9.55.xlsx` (Mitigation, MT, Unified and Distribution keep only the latest there; older versions are in git history).
 - **Latest and active workbooks** (sections 5a, 9.7): the latest `.xlsx` of each module sits in its folder; the latest Master, the MT, is `excel_ai/master/CPAT-AI-MT_latest.xlsm`; `excel_ai/active_workbooks/` (git-ignored) holds the activated MT `CPAT-AI-MT.xlsb` and the activated modules.
 - **Inputs** (section 4): use legacy MTInputs names, e.g. CPLevelTarget for the carbon price in the target year, the same in Excel and Python.
 - **Style** (sections 1-2): fixed column layout and CPAT colours, e.g. input cells light green, code cells light blue, calculation cells unfilled; formulas short (target 90 characters, at most 115).

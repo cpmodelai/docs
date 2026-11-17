@@ -111,6 +111,62 @@ $$
 
 Excel-AI notation. The fee path continues linearly after its target year. Source: Excel-AI: Mitigation section 2 (mfee.p, mfee).
 
+[]{#eqlist-M1-9}**M1.9  Carbon tax coverage by sector and fuel**
+
+$$
+\varphi_{e,f,t} = \begin{cases} 1 & \text{cell } (e, f) \text{ covered} \\ \chi_t & \text{otherwise} \end{cases}, \qquad \varphi_{e,t} = \max_f \varphi_{e,f,t}, \qquad \tilde\varphi_{e,f,t} = \varphi_{e,f,t} / \varphi_{e,t}\ (0 \text{ if } \varphi_{e,t} = 0)
+$$
+
+Over coverage sectors $e$ (power and the 16 subsectors), fuels $f$. Excel-AI notation (1.9.35: one input per sector x fuel, CTCov_<Sector>_<Fuel>; was a fuel switch x a sector switch). $\chi_t$ is the exemption phase-out (exph). The sector rate ctr (M1.3) reads $\varphi_e$; the tax per GJ (ctxnew), the power tax (xac) and the covered CO2 (covct) read $\tilde\varphi_{e,f}$. Source: Excel-AI: Mitigation section 1 (ctcov, ctcs).
+
+[]{#eqlist-M1-10}**M1.10  ETS price floor**
+
+$$
+\underline{p}_t = o_t \left(F_0 + (F_1 - F_0)\,\tau_t\right), \qquad \tau_t = \frac{t - T_0}{\max(1, T_1 - T_0)}
+$$
+
+Excel-AI notation (1.9.36-1.9.37). $\tau_t$ is capped at 1 unless the floor continues linearly (ETSFloorCont); $o_t$ is 1 once the new ETS applies. Source: Excel-AI: Mitigation section 1 (ets.flt, ets.fl).
+
+[]{#eqlist-M1-11}**M1.11  New ETS cap with offsets, price and revenue factor**
+
+$$
+\mathit{ofs}_t = 1 + o_t \max(0, s^{off})\,\mathbb{1}[p^{off} \le \max(\underline{p}_t, \tilde{p}^E_{t-1})], \quad \mathit{cap}_t = B_t (1 + \Delta_t)\,\mathit{ofs}_t, \quad \tilde{p}^E_t = \max(p^E_t, \underline{p}_t)\,v, \quad \mathit{rf}_t = \frac{1}{v\,\max(1, \mathit{ofs}_t)}
+$$
+
+Excel-AI notation (1.9.36-1.9.43). Offsets (share $s^{off}$ of the cap, price $p^{off}$) count while their price is at most the floor or the previous year's permit price, so the model runs year by year; the price estimate is EQ-A1.1 on the cap with offsets; offsets earn the government nothing (rf); ofc is the offsets' cost (memo). Source: Excel-AI: Mitigation section 1 (ets.ofs, ets.ofp, ets.cap, ets.pe, ets.rf, ets.ofc).
+
+[]{#eqlist-M1-12}**M1.12  Existing excise kept**
+
+$$
+\xi_{c,t} = \mathbb{1}[\text{keep existing taxes of the fuel}]\left(1 - r\,\min\!\left(1, \max\!\left(0, \frac{t - T_0 + 1}{\max(1, T_r - T_0 + 1)}\right)\right)\right)
+$$
+
+Over price lines $c$ and electricity. Excel-AI notation (1.9.37, 1.9.43). $r$ ExciseReplace, $T_0$ the carbon price start year, $T_r$ ExciseReplaceYear. The positive existing excise not kept is removed from the price line (pcsw, M2.1 block) and from electricity (xte, M4.8). Source: Excel-AI: Mitigation section 1 (xtf).
+
+[]{#eqlist-M1-13}**M1.13  VAT normalisation share and the general VAT rate**
+
+$$
+\nu_{f,t} = \min\!\left(1, \max\!\left(0, \frac{t - T_f + 1}{\max(1, N_f)}\right)\right) \text{ where chosen, else } 0; \qquad \bar{v}_t = VAT^{WEO}_{\min(t, T_{hist})}
+$$
+
+Over fuels with the option (coal, gas, gasoline, diesel, LPG, kerosene, electricity). Excel-AI notation (1.9.44). Source: Excel-AI: Mitigation section 1 (vatg, vnf).
+
+[]{#eqlist-M1-14}**M1.14  Non-energy price instruments**
+
+$$
+\rho_{j,t} = \min\!\left(1, \frac{t - T_j + 1}{\max(1, N_j)}\right) (0 \text{ before } T_j), \quad P_{j,t} = (\tau_j + \sigma_j + a_j)\,\rho_{j,t}, \quad c_{j,t} = 1 - \exp\!\left(\ln(1 - \theta_j)\,\frac{\max(0, P_{j,t})}{\bar{P}}\right)
+$$
+
+Over non-energy GHG categories $j$ (industrial processes, agriculture, waste, land use). Excel-AI notation (1.9.50): tax $\tau_j$, subsidy per tonne abated $\sigma_j$, Article 5 payments $a_j$ (land use only); the cut follows a semi-elastic abatement curve calibrated to the share $\theta_j$ abatable at $\bar{P}$ (NeShare, NeRefPrice; IPCC AR6 WGIII). Source: Excel-AI: Mitigation section 1 (ner, nep, nec).
+
+[]{#eqlist-M1-15}**M1.15  Consumer subsidy phase-out by price line**
+
+$$
+\bar{s}_c = \max(s^{BA}, s_c), \qquad \phi^{cs}_{c,t} = 1 - \bar{s}_c \min\!\left(1, \frac{t - T_c}{\max(N_c, 1)}\right) \text{ if on and } t > T_c;\ 1 \text{ otherwise (policy scenarios; the baseline: } \phi_{cs,t})
+$$
+
+Over price lines $c$. Excel-AI notation (1.9.36; 1.9.56): each line with its own start year, period and share to phase out (ConsSubYear_, ConsSubYears_, ConsSubShare_), at least the baseline share (ShareofConsSubPhaBA). Source: Excel-AI: Mitigation section 1 (csp, csf).
+
 ### M2 Energy prices
 
 Prices before policies by sector group $g$ and fuel $f$ (the methodology's price sectors), then new policies and the after-tax price by sector $s$ and fuel $f$. All quantity-free: computed for all years before the year loop.
@@ -162,6 +218,22 @@ sh_{s,f} = \Sigma_s\,ef_{s,f}
 $$
 
 Over sectors $s$, fuels $f$. Excel-AI notation (the methodology names the shadow price in words only). Source: Excel-AI: E32.
+
+[]{#eqlist-M2-7}**M2.7  Pass-through of supply-cost changes in the scenario**
+
+$$
+\pi_{c} = \pi^{man}_c \text{ (manual) },\ 1 \text{ (none) },\ \pi^{b}_c \text{ (bucketed) }
+$$
+
+Over price lines $c$. Excel-AI notation (1.9.41): GovPriceControls of the scenario (was the baseline's); read by txf and fadtx. Source: Excel-AI: Mitigation section 1 (pcs).
+
+[]{#eqlist-M2-8}**M2.8  VAT normalisation per unit**
+
+$$
+\Delta VAT_{s,f,t} = \nu_{f,t}\,\max(0, \bar{v}_t - v_{s,f})\left(\frac{p^{pre}_{s,f,t}}{1 + v_{s,f}} + \text{new policy}_{s,f,t}\right)
+$$
+
+Over sectors $s$, fuels $f$ with the option. Excel-AI notation (1.9.44, LAMBDA VATNORM). New policy = nce + xcpd + csw + pcw; vtn is also in the VAT revenue rvt and the new revenue rnew. Source: Excel-AI: Mitigation section 4 (vtn, atp).
 
 ### M3 Fuel use
 
@@ -251,6 +323,22 @@ $$
 
 Over user groups $g$ (residential, industry); $gnc^{av} = \sum_f gns_f\,gnc_f$ the generation-weighted generation cost. Excel-AI's form (data up to the last historical year, then cost changes passed through at $pcc_g$; the supply cost uses last year's generation cost). The methodology instead adds a markup $mu^T$ calibrated to historical retail prices; Excel-AI's subsidy gap $p^0/(1+vatrate) - sp^T$ plays that role (appendix A4). $reb$ is the rebate switch, $pex$ the power excise. Source: methodology: 03_Mitigation, Power prices > Concept 4; Excel-AI: E48-E51.
 
+[]{#eqlist-M4-8}**M4.8  Existing electricity tax removed**
+
+$$
+x^{e}_{u,t} = -\mathbb{1}[t > T_{hist}]\,(1 - \xi_{ecy,t})\max(tx^e_{u,t}, 0)
+$$
+
+Over electricity users $u$. Excel-AI notation (1.9.43); in the excise of the price before VAT (pex). Source: Excel-AI: Mitigation section 10 (xte, pex).
+
+[]{#eqlist-M4-9}**M4.9  Electricity VAT normalisation**
+
+$$
+v^{e}_{u,t} = \nu_{ecy,t}\,\max(0, \bar{v}_t - v_u)\left(\frac{p^{pre}_{u,t}}{1 + v_u} + c_t\,\pi\,(1 - r)\right)\Big/(1 + v_u)
+$$
+
+Over electricity users $u$. Excel-AI notation (1.9.44): per kWh before VAT, as pex is taxed at the VAT rate; $c_t\,\pi\,(1 - r)$ is the carbon cost passed on net of rebates. Source: Excel-AI: Mitigation section 10 (vte, pex).
+
 ### M5 Road transport (engineer model)
 
 Excel-AI notation throughout (the methodology's road chapter covers externalities, not the engineer model). Vehicle classes: passenger, freight, 2-3 wheelers; technologies: ICE, BEV, PHEV.
@@ -307,6 +395,14 @@ $$
 
 $rev^{pow}$ power-sector revenue (appendix A6), $rev^{mf}$ methane fee (appendix A7). Source: Excel-AI: E75, E76.
 
+[]{#eqlist-M6-4}**M6.4  Revenue of the non-energy instruments**
+
+$$
+R^{ne}_t = \sum_j \left(T^{ne}_{j,t} + S^{ne}_{j,t}\right) + A_t
+$$
+
+Excel-AI notation (1.9.53): taxes, the subsidy cost (negative) and the Article 5 inflow; in the total revenue rtot and the revenue by policy (line ne). Source: Excel-AI: Mitigation section 12 (rne, rtot, rpol.ne).
+
 ### M7 Emissions
 
 []{#eqlist-M7-1}**M7.1  Energy-related CO2**
@@ -324,6 +420,14 @@ em_{u,p,t} = em_{u,p,t-1}\,\frac{driver_{u,t}}{driver_{u,t-1}}
 $$
 
 Over UNFCCC sectors $u$, gases $p$. Each source grows with its driver (energy CO2, industrial energy CO2, GDP and population with elasticities); the source equations are in appendix A7. Source: methodology: 03_Mitigation, Emissions (N2O, IPPU, agriculture, LULUCF, waste); Excel-AI: E80-E86.
+
+[]{#eqlist-M7-3}**M7.3  Non-energy emissions cut by price instruments**
+
+$$
+\Delta G_{j,t} = -c_{j,t}\max(0, G_{j,t}), \quad T^{ne}_{j,t} = \tau_j \rho_{j,t}\max(0, G_{j,t} + \Delta G_{j,t}), \quad S^{ne}_{j,t} = \sigma_j \rho_{j,t}\,\Delta G_{j,t}, \quad A_t = -a\,\rho_{lucf,t}\,\Delta G_{lucf,t}
+$$
+
+Over non-energy GHG categories $j$. Excel-AI notation (1.9.50; MtCO2e, USD m, PJ). The cuts of industrial processes, agriculture and waste reduce total GHG (ghg.all.all); the land-use cut reduces GHG including LULUCF (ghg.inc). bgs: biogas from the waste cut (memo). Source: Excel-AI: Mitigation section 14 (ghg.cut, ghg.ntx, ghg.nsb, ghg.na5, ghg.bgs).
 
 ### M8 GDP
 
@@ -352,6 +456,14 @@ lvl_t = 1 + \varepsilon^{GDP}_{t-1}, \qquad Y_t = Y^{0}_t\,lvl_t, \qquad 1 + g_t
 $$
 
 The only link from year $t$ to year $t+1$ other than lags of a block's own quantities. Revenue of year $t$ moves GDP from $t+1$ (root NORMS 5c). Source: Excel-AI: E95.
+
+[]{#eqlist-M8-4}**M8.4  Share of the excess revenue recycled**
+
+$$
+\psi = \psi_{use} \text{ (the use of revenues: normal budget 1, deficit reduction 0, half recycled 0.5) or the user's share}
+$$
+
+Excel-AI notation (1.9.47): the rest of the excess revenue reduces the deficit. Source: Excel-AI: Mitigation section 16 (fis.ru, fis.eff).
 
 ### D Distribution
 
@@ -455,7 +567,7 @@ $$
 P^{s,k}_t = \begin{cases} \text{data} & t < T^{s,k} \\ P^{s,k}_{t-1}\,(1 + \pi^{US}_t) & t \ge T^{s,k} \text{ (IMF, WB, IEA)} \\ P^{s,k}_{t-1}\,P^{s,k}_{t-1}/P^{s,k}_{t-2} & t \ge T^{s,k} \text{ (EIA)} \end{cases}
 $$
 
-Over sources $s$ (IMF, WB, IEA, EIA; averages AVG, IMF-IEA, IMF-WB; Manual), commodities $k$ (oil, coal, gas LNG, North America, Europe, global, Europe shifting to LNG). Excel-AI notation. $T^{s,k}$ the first extended year of the series, $\pi^{US}$ US GDP deflator inflation. Averages skip missing sources; global gas is the average of LNG, North America and Europe; Manual: IMF to 2025, then the manual path. Excel-AI reads the World Bank gas rows by position (its LNG is the Europe series and the reverse). Past its data (2041 on) the IEA series reads a misaligned cell in Excel-AI (an issue still to register); Python leaves it missing. Source: Excel-AI: Inputs_pint (build_inputs_pint); Mitigation section 3 (gpn, gp).
+Over sources $s$ (IMF, WB, IEA, EIA; averages AVG, IMF-IEA, IMF-WB; Manual), commodities $k$ (oil, coal, gas LNG, North America, Europe, global, Europe shifting to LNG). Excel-AI notation. $T^{s,k}$ the first extended year of the series, $\pi^{US}$ US GDP deflator inflation. Averages skip missing sources; global gas is the average of LNG, North America and Europe; Manual: IMF to 2025, then the manual path. Excel-AI reads the World Bank gas rows by position (its LNG is the Europe series and the reverse). Past its data (2041 on) the IEA series is missing (NA) in Excel-AI (prototype bug M27, registered 1.9.11, fixed 1.9.12) and in Python. Source: Excel-AI: Inputs_pint (build_inputs_pint); Mitigation section 3 (gpn, gp).
 
 []{#eqlist-A2-4}**A2.4  Historical domestic prices and forecasting coefficients**  *(adjustment)*
 
@@ -709,6 +821,46 @@ $$
 
 Over pollutants $p$ (PM2.5, NOx, SO2, VOC, BC, OC, CO), subsectors $s$ and power, sources (coal and gas plants, other power, road, ground level, other, food and agriculture). Excel-AI notation (Mitigation section 15, read by the air pollution module). Combustion factors of the base year and the final year (A7.1), weighted by $w_t$ (EFSel share $\omega$, final year EFEndYear); power by generation type. Food processing uses the food share of the energy balance; agriculture is the rest of food and forestry. By source, POM = 1.3 OC and other PM = PM2.5 - BC - POM (at least 0); methane by source from the CH4 rows. GWP100 of the GAINS region of the country. Source: Excel-AI: Mitigation section 15.
 
+[]{#eqlist-A7-7}**A7.7  Share of CO2 covered by the ETS and by a feebate, by sector group**
+
+$$
+\kappa^{ETS}_g = \frac{\sum_{e \in g} CO2_e\,\kappa_e}{CO2}, \qquad \kappa^{FB}_g = \frac{\sum_{e \in g} CO2_e\,\mathbb{1}[\text{feebate covers } e]\,\mathbb{1}[b_g > 0]}{CO2}
+$$
+
+Over sector groups $g$ and power. Excel-AI notation (1.9.47); buildings read the residential feebate rate, other energy use the industrial one. Source: Excel-AI: Mitigation section 17 (cov_etg, cov_fbg).
+
+[]{#eqlist-A7-8}**A7.8  Price signal per tonne of CO2**
+
+$$
+\sigma_{s,f,t} = \frac{p_{s,f,t} / (1 + v_{s,f}) - sp_{s,f,t}}{EF_{s,f}} \quad (0 \text{ where } EF_{s,f} = 0)
+$$
+
+Over subsectors $s$, fuels $f$. Excel-AI notation (1.9.32, plan 000z): the after-tax price net of VAT less the supply cost of the price block, per tonne of CO2. Source: Excel-AI: Mitigation section 4 (tsc, tsig).
+
+[]{#eqlist-A7-9}**A7.9  TECP weight**
+
+$$
+\bar{c} = \max(sp, \phi\,p), \quad m = \frac{p - \bar{c}}{\ln(p / \bar{c})} \text{ (or } p, \bar{c}), \quad w_{s,f,t} = \frac{CO2_{s,f,t}\,|\varepsilon_U + \varepsilon_{eff}|\,EF_{s,f}}{m}
+$$
+
+Over subsectors $s$, fuels $f$. Excel-AI notation (1.9.32, plan 000z, decision D5): the emission cut from a uniform 1 USD/tCO2 tax; $\phi$ TECPFloor, the price by TECPWeight (1 the logarithmic mean). Source: Excel-AI: Mitigation section 4 (tfc, tm, tw).
+
+[]{#eqlist-A7-10}**A7.10  Price signal of power generation per tonne**
+
+$$
+\sigma^{x}_{f,t} = \frac{(tx_{c(f)} + sub_{c(f)})\,PE_{f,t}}{CO2_{f,t}}, \quad \sigma^{n}_{f,t} = \frac{(x^{ac}_{f,t} + x^{ck}_{f,t})\,G_{f,t}}{CO2_{f,t}}
+$$
+
+Over generation fuels $f$ (coal, gas, oil). Excel-AI notation (1.9.32): existing taxes and subsidies of the fuel's price block on its input, new and existing carbon pricing per kWh on generation. Source: Excel-AI: Mitigation section 17 (tsgx, tsgn, tsigp).
+
+[]{#eqlist-A7-11}**A7.11  Total carbon price and total effective carbon price**
+
+$$
+TCP_g = \frac{\sum_{s \in g}\sum_f CO2^{ref}_{s,f}\,\sigma_{s,f}}{\sum_{s \in g}\sum_f CO2^{ref}_{s,f}}, \qquad TECP_g = \frac{\sum_{s \in g}\sum_f w^{ref}_{s,f}\,\sigma_{s,f}}{\sum_{s \in g}\sum_f w^{ref}_{s,f}}
+$$
+
+Over sector groups $g$ (transport, buildings, industry, other energy, power, all); fossil fuels. Excel-AI notation (1.9.32, plan 000z): weights of the baseline (scenario 1, same year); power weights its CO2 by the ETS semi-elasticity of power for the TECP. Source: Excel-AI: Mitigation section 17 (tcpw ... tecp).
+
 ### A8 GDP and results
 
 GDP multipliers, external balance, the inputs of the modules (section 17b), welfare, subsidies and efficient prices (section 18).
@@ -760,6 +912,14 @@ S^{exp}_{i} = \max(0, sp_i - p_i)\,Q_i, \qquad S^{imp}_{i} = [p_i \le p^{*}_i]\,
 $$
 
 Over price rows $i$ (oil products; gas, coal and electricity by industry, residential, power and other: the use-weighted average), price codes $c$, years $t$. Excel-AI notation (Mitigation section 19, rows 8675-9059). Subsidies: supply cost of the year, external cost (global climate, air pollution, road transport per GJ), VAT at the general rate (VAT_WEO of 2022, Excel-AI VatGen) on both where consumers pay VAT (oil products times the household share); use in PJ (GWh). Efficient prices per price unit: the baseline supply cost, the Pigouvian taxes (air pollution, climate cost of the price code, road transport), VAT on the supply cost and, where ExternalityAddVAT, on the Pigouvian taxes; the averages weighted by use. Source: Excel-AI: Mitigation section 19.
+
+[]{#eqlist-A8-7}**A8.7  Efficient price of other oil products**
+
+$$
+p^{eff}_{oop,t} = \left(sp^{ref}_{oop,t} + AP_{oop,t}\right) u + \frac{CC_{oop,t}}{L}
+$$
+
+Excel-AI notation (line oop.all of section 19): per litre ($u$ GJ per barrel / litres per barrel $L$); air pollution the use-weighted average per GJ, the climate cost of the price code per barrel / $L$; no VAT; not in the averages. Source: Excel-AI: Mitigation section 19 (sup.cost ... txo.co2e, line oop.all).
 
 ## Adjustments: distribution
 
@@ -830,6 +990,124 @@ t_i = \sum_k L_{i,k}\,\phi_k\ (i \notin fuels), \qquad t^{*}_i = t_i\,\gamma_{s(
 $$
 
 Over GTAP sectors $i$, CPAT sectors $s$ (by output $Q$ or household demand). Pass-through $\gamma$ where PassthroughDist = Yes; the 20 sectors with the largest price change listed (ties by sheet order). Source: Excel-AI: Distribution section 11.
+
+## Appendix C: transport co-benefits module
+
+Excel-AI Transport co-benefits module 0.1.4 (the legacy Transport sheet with the module's fixes; modes Legacy and Engineer). It reads Mitigation's results (tab FromMitigation) and runs after Mitigation: Mitigation's Pigouvian tax keeps the typed per-km costs (tab FromTrans), as Excel-AI.
+
+### T1 Transport co-benefits
+
+**T1.1  Extrapolated VSL and earnings path**
+
+$$
+x_t = d_t\ (t \le T^{AP}), \qquad x_t = x_{t-1}^2 / x_{t-2}\ (t > T^{AP})
+$$
+
+Source: Excel-AI: Transport rows vsl, wage (legacy row 108; fix L240).
+
+**T1.2  Hourly earnings**
+
+$$
+w_t = e^{day}_t\,D_{base} / h
+$$
+
+Source: Excel-AI: Transport row wage.data (legacy row 107; fix L243).
+
+**T1.3  Population growth**
+
+$$
+n_t = POP_t / POP_{t-1} - 1
+$$
+
+Source: Excel-AI: Transport row popg (legacy row 105).
+
+**T1.4  Road share in mode Engineer**
+
+$$
+rs_f = \frac{Q^{eng}_f}{Q^{all}_f - Q^{road}_f + Q^{eng}_f}
+$$
+
+Source: Excel-AI: Transport rows rsh (upgrade U20).
+
+**T1.5  Congestion path**
+
+$$
+c_t = d_t \text{ (data years, } d_t > 0), \qquad c_t = c_{t-1}(1+g_t)^{\epsilon_Y}(1+n_t)^{\epsilon_N}
+$$
+
+Source: Excel-AI: Transport rows cong, peak (legacy rows 200, 210).
+
+**T1.6  Road deaths**
+
+$$
+D_t = D_{t-1}\,VKT_t / VKT_{t-1}
+$$
+
+Source: Excel-AI: Transport row dth (legacy row 173).
+
+**T1.7  External road deaths**
+
+$$
+D^x = D\,s_4\,m\,x + D\,(1 - s_4)
+$$
+
+Source: Excel-AI: Transport row dthx (legacy rows 175-178).
+
+**T1.8  Accident external cost**
+
+$$
+ACC = D^x\,VSL\,10^{-9}\,\left(1 + a\,(D^x/D)^b\right)
+$$
+
+Source: Excel-AI: Transport rows acc, acc.km (legacy rows 179-185).
+
+**T1.9  Travel time lost in congestion**
+
+$$
+H = VKT / v - VKT / v_{ff}, \qquad v = v_{ff} / (1 + c/100)
+$$
+
+Source: Excel-AI: Transport rows speed, hours (legacy rows 215-217).
+
+**T1.10  Value of travel time lost**
+
+$$
+VOT = w\,H\,(1 - \tau)\,\sigma
+$$
+
+Source: Excel-AI: Transport rows vot, con, con.km (legacy rows 218-220; fix L241).
+
+**T1.11  Road maintenance spending**
+
+$$
+M_t = d_t \text{ (data years)}, \qquad M_t = M_{t-1}\,FVKT_t / FVKT_{t-1}
+$$
+
+Source: Excel-AI: Transport row maint (legacy row 229; fix L236).
+
+**T1.12  Road damage per freight vehicle-km**
+
+$$
+r = \bar{r} \text{ (global)}, \quad \text{else } r = M\,x_M / FVKT / 1000
+$$
+
+Source: Excel-AI: Transport rows dmg.km, dmg (legacy rows 230-233).
+
+**T1.13  External cost per litre of fuel**
+
+$$
+e_f = c^{km}\,k_f\,\delta_f\,rs_f \quad (\text{road damage: } \times fs_f;\ k_{die} = FVKT / Q^{fre}_{die})
+$$
+
+Source: Excel-AI: Transport section 6 (legacy rows 186-190, 221-225, 234-237; fixes L193, L242).
+
+**T1.14  Change against scenario 1**
+
+$$
+W^{acc} = ACC^{ref} - ACC, \ \ldots, \quad W^{\%} = \sum W / Y
+$$
+
+Source: Excel-AI: Transport sections 7-8 (legacy rows 356-370, 406-418; fix L237).
 
 ## Symbols and codes
 

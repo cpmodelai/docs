@@ -4,8 +4,7 @@
 
 ```{=html}
 <div class="decks">
-<a class="deck-card" href="../presentations/earlier_versions/01_CPAT-AI_Overview_latest.pptx" style="display:flex;gap:14px;align-items:center;text-decoration:none;border:1px solid #dee2e6;border-radius:6px;padding:10px;margin:0 0 12px;max-width:640px;color:inherit"><img src="../presentations/thumbs/01_CPAT-AI_Overview_latest.png" alt="First slide of CPAT-AI overview: the mitigation prototype" style="width:200px;border-radius:4px;border:1px solid #dee2e6;margin:0"><span><b style="color:#2780e3">CPAT-AI overview: the mitigation prototype</b><br><span style="font-size:.9em;color:#6c757d">Status, how to run it, results (release 1.5) · PowerPoint, latest version</span></span></a>
-<a class="deck-card" href="../presentations/earlier_versions/04_CPAT-AI_Pitch_latest.pptx" style="display:flex;gap:14px;align-items:center;text-decoration:none;border:1px solid #dee2e6;border-radius:6px;padding:10px;margin:0 0 12px;max-width:640px;color:inherit"><img src="../presentations/thumbs/04_CPAT-AI_Pitch_latest.png" alt="First slide of CPAT-AI: climate policy analysis you can read, check and run fast" style="width:200px;border-radius:4px;border:1px solid #dee2e6;margin:0"><span><b style="color:#2780e3">CPAT-AI: the pitch</b><br><span style="font-size:.9em;color:#6c757d">Climate policy analysis you can read, check and run fast; 8 slides · PowerPoint, latest version</span></span></a>
+<a class="deck-card" href="../presentations/02_CPAT-AI_Excel_latest.pptx" style="display:flex;gap:14px;align-items:center;text-decoration:none;border:1px solid #dee2e6;border-radius:6px;padding:10px;margin:0 0 12px;color:inherit"><img src="../presentations/thumbs/02_CPAT-AI_Excel_latest.png" alt="First slide of CPAT-AI Excel: pitch and guide" style="width:220px;border-radius:4px;border:1px solid #dee2e6;margin:0"><span><b>CPAT-AI Excel: pitch and guide</b><br><span style="font-size:.9em;color:#6c757d">What is new in 2.0, the interface and its dashboards</span></span></a>
 </div>
 ```
 
@@ -32,18 +31,18 @@ It answers one question: **what do carbon pricing and related policies do to ene
 
 ## Quick start
 
-The module workbooks have **no macros**. Every macro is in the **Master workbook**, `excel_ai/master/CPAT-AI-MT_latest.xlsm (the MT, Multiscenario Tool; activated as `excel_ai/active_workbooks/CPAT-AI-MT.xlsb`)`. The mitigation module ships as `excel_ai/mitigation/CPAT-AI-Mitigation_latest.xlsx` (every version in `excel_ai/mitigation/releases/`); the Master **activates** it into the workbook you work in, `excel_ai/active_workbooks/CPAT-AI-Mitigation_latest.xlsb`.
+The module workbooks have **no macros**. Every macro is in the **Master workbook**, `excel_ai/master/CPAT-AI-MT_latest.xlsm` (its Activate all saves it into the git-ignored `excel_ai/active_workbooks/` as `CPAT-AI-MT.xlsb`, where you then work). The mitigation module ships as `excel_ai/mitigation/CPAT-AI-Mitigation_latest.xlsx` (every version in `excel_ai/mitigation/releases/`); the Master **activates** it into the workbook you work in, `excel_ai/active_workbooks/CPAT-AI-Mitigation_latest.xlsb`.
 
 1. **Get the files.** Keep a clone of the repository up to date (git, or the SyncRepo script). The Master finds the modules in the clone, or else downloads them from GitHub.
 2. **Open the Master** in Excel 365 and enable macros. If the file was downloaded, unblock it first (file Properties > Unblock). It opens on tab `Dashboard`, which has the three core macros: *Activate all*, *Run scenarios* and *Update data*. Every other macro is on tab `Activation and Macros`, one button each, with what it does.
 3. **Activate all.** The Master opens each module's `.xlsx`, copies the 2035 column of every scenario group across to 2041, adds the live scenario groups (four by default: the baseline and three scenarios), writes its scenario table into the module, recalculates and saves `CPAT-AI-Mitigation_latest.xlsb` next to itself. Activate again whenever a new `.xlsx` arrives.
-4. **Choose the countries and the scenarios** on the Master's `Dashboard`. Type one country per row in the Countries list and one scenario ID per row in the Scenario list (both grow downwards). The IDs are those of the Master's tab `Scenarios`: `BASE` the baseline, `P1`-`P5` the presets, `U1`, `U2`, ... your own scenarios. Every country listed runs every scenario listed. Choose the data source and the rows to load (one country or all) beside the buttons.
+4. **Choose the countries and the scenarios** on the Master's `Dashboard`. Type one country per row in the Countries list and one scenario ID per row in the Scenario list (both grow downwards). The IDs are those of the Master's tab `Scenarios`: `BASE` the baseline, `P1`-`P3` the presets (P1 carbon price \$20/tCO2 from 2027, P2 Package A, P3 carbon price \$50/tCO2), `P4` an extra (Package B, an ETS on power and industry), `U1`, `U2`, ... your own scenarios. Every country listed runs every scenario listed. Choose the data source and the rows to load (one country or all) beside the buttons.
 5. **Update data** if you run more than one country or need a fresher source: the Master loads the linked data tabs by Power Query, once for all countries.
 6. **Run scenarios.** The Master runs every country with every scenario, in batches over the live scenario groups 2-4 of the mitigation workbook (the baseline once per country). An ETS scenario gets its goal seek, one per group. Each run is stored as values in tab `StoredResults`. *Estimate run time* (on the other tab) says how long a run will take.
 7. **Read the results.**
-   - **Live**, in the mitigation workbook: tab `Dashboard` (the country and the scenarios of groups 2-4, key numbers and charts with the four scenarios), tab `Scenario comparison` (the live scenarios side by side in a chosen year), tab `Outputs` (every live scenario group side by side, one output code per row) and tab `Diagnostic` (the country's baseline).
+   - **Live**, in the mitigation workbook: tab `Dashboard` (the country and the scenarios of groups 2-4, key numbers and charts with the four scenarios), tab `Comparison` (the live scenarios side by side in a chosen year), tab `Output Data` (every live scenario group side by side, one output code per row), tabs `Climate` and `Fiscal`.
    - **Stored**, in the Master: `StoredResults` (one row per output per run), `Scenario comparison` (the key indicators of up to ten runs in a chosen year, against the first), `OneCountry` (one country, several scenarios, as time series) and `ManyCountries` (several countries, one scenario, one year).
-8. **Look at one scenario live.** On the mitigation workbook's `Dashboard`, choose the country and the scenarios of groups 2-4 by name (group 1 is the baseline). To change a policy, edit its column on tab `Scenarios` (the rows of legacy MTInputs; for example `CPLevelTarget`, the carbon price in the target year). In the Master: *Send scenario to Mitigation* puts a Master scenario into group 2; *Get live scenario* adds group 2 to the Master's table as the next user scenario; *Sync scenarios to Mitigation* writes the whole table into the module.
+8. **Look at one scenario live.** On the mitigation workbook's `Dashboard`, choose the country and the scenarios of groups 2-4 by their short label (tab `Pre-defined` row 2, e.g. Carbon tax \$20, Tax to \$50 + feebates; group 1 is the baseline); the full name shows on a grey line under each picker. A scenario group pasted by hand is read wherever it starts (found by its header "Scenario: output code" in row 1); the note at the top of `Mitigation` says which columns to copy and where to paste, and a red line on the Dashboard says when a group is not at its column. To change a policy, edit its column on tab `Scenarios` (the rows of legacy MTInputs; for example `CPLevelTarget`, the carbon price in the target year). In the Master: *Send scenario to Mitigation* puts a Master scenario into group 2; *Get live scenario* adds group 2 to the Master's table as the next user scenario; *Sync scenarios to Mitigation* writes the whole table into the module.
 9. **Distribution.** *Distribution from Mitigation* (other tab) copies the export block of the activated mitigation workbook (section 11a) into the activated distribution workbook, recalculates and saves it.
 
 **Good practice.** The `.xlsb` files are generated: on a git conflict take either side and activate again; never merge them, and never commit Excel's `~$` lock files. A workbook run with real (non-public) data stays on your local drive.
@@ -54,19 +53,16 @@ The tabs, left to right:
 
 | Tab or group | What it holds |
 |---|---|
-| `Dashboard` | The main view: the country and the scenarios of groups 2-4 (chosen by name; group 1 the baseline), the current situation (the baseline in a key year), the three policy scenarios against the baseline, eight key charts with the four scenarios, and the data that feed them below (rolled up) |
-| `Scenario comparison` | The four live scenarios side by side in a chosen year: key results and their change against the baseline, four charts over time, emission reductions by sector and revenue gain by fuel |
-| `Cover` | The settings of the live tool (the live scenario groups at activation, the scenarios of groups 3 and 4, the data transfer), the status written by the Master |
-| `Scenarios` | Every scenario: one column each, the rows of legacy MTInputs exactly (row numbers and parameter names as legacy); row 2 short name, row 5 number, row 6 name, row 7 ID (`BASE`, `P1`-`P5`, `U1`, ...); drop-down lists of the options; the last columns are the Master's run columns |
-| `Mitigation` | The model: numbered sections, top to bottom, one group of columns per scenario, years across (2022 to 2041) |
-| `Outputs` | The key results of every scenario group, side by side, by output code, in Mitigation's row order within each topic; the revenue of every fuel |
-| `Diagnostic` | The country's situation and baseline: headline numbers, then four charts each of the macroeconomy and public finances, emissions and targets, and the energy system; the data below (rolled up) |
-| `Docs & Versions` | Version log, about this workbook, differences with legacy CPAT (with their register codes), the variable dictionary and the LAMBDAs |
-| `INPUTS->>` | `Manual inputs` (the legacy tab of that name, at the legacy addresses), `Settings` (workbook-wide settings and constants: name, value, unit, description, source, by area of the model), `Mappings` (sectors, fuels, policy keys, MTInputs rows, and the data step: every lookup of the data tabs) |
+| `Dashboard` | The main view: the country and the scenarios of groups 2-4 (chosen by short name; group 1 the baseline), the current situation (the baseline in a key year), the three policy scenarios against the baseline, eight key charts with the four scenarios, and the data that feed them below (rolled up) |
+| `SCENARIOS->>` | `Pre-defined` (every scenario, one column each, the rows of legacy MTInputs; row 2 short name, row 5 number, row 6 name, row 7 ID `BASE`, `P1`-`P3`, `U1`, ...; the last columns are the Master's run columns; tab `Scenarios` before 1.9.41) and `User-defined` (one user-defined scenario on one page: policy panels by sector, the coverage table, the subsidy and excise table with the existing subsidy and tax of the last historical year; more options in collapsed row groups; charts in a collapsible column group on the right) |
+| `OUTPUTS->>` | `Comparison` (the four live scenarios side by side in a chosen year), `Climate`, `Fiscal`, and `Output Data` (the key results of every scenario group side by side by output code, in Mitigation's row order; tab `Outputs` before 1.9.40) |
+| `ADVANCED->>` | `Cover` (the settings of the live tool, the status written by the Master, version log and documentation), `Settings` (the settings list at the top, then the workbook-wide settings and named constants), `Manual Inputs` (the legacy tab of that name, at the legacy addresses), `Mappings` (sectors, fuels, policy keys, MTInputs rows, the data step) |
+| `CALCS->>` | `Mitigation`: the model, numbered sections top to bottom, one group of columns per scenario, years across (2022 to 2041) |
+| (Mitigation section 11) | Exports to the other modules: 11a Distribution, 11b transport co-benefits, 11c module settings (1.9.45: the transport co-benefits and air pollution settings set on tab Settings, read by the modules through FromMitigation) |
 | `OTHER MODULES->>` | `FromAP` and `FromTrans`: what Mitigation reads from the air-pollution and transport co-benefits modules, by country (row 1 says whether the country has rows) |
 | `DATA_MITIGATION->>`, `DATA_TRAN->>` | The data tabs, in the legacy layout; the linked ones are refreshed by the Master (Power Query) |
 
-Colours: lemon cells with bold black text are the inputs of `Dashboard` and `Cover`; blue bands mark the export sections (what other modules read); pale orange marks data that differ from the source by a decision of the team.
+Input tabs open at 65% zoom. Colours: lemon cells with bold black text are the inputs of `Dashboard`, `Cover` and the policy and settings inputs; blue bands mark the export sections (what other modules read); pale orange marks data that differ from the source by a decision of the team.
 
 ## How it works
 
@@ -92,7 +88,7 @@ Each scenario is a group of columns: group 1 the baseline (scenario 1), group 2 
 | 14 | GHG emissions: methane, nitrous oxide, F-gases, other inventory categories; 14b change; 14c NDC | Emissions and ETS |
 | 15 | Local air pollutants: EXPORT to the air pollution module | Emissions and ETS |
 | 16 | GDP effects and external balance: fiscal multipliers; 16b energy trade balance | Revenues, GDP and welfare |
-| 17 | Carbon pricing: prices, coverage, effective carbon rate, the new ETS against its cap | Emissions and ETS |
+| 17 | Carbon pricing: prices, coverage, effective carbon rate, the Total Carbon Price and Total Effective Carbon Price, the new ETS against its cap | Emissions and ETS |
 | 18 | Inputs from air pollution and transport co-benefits: the damages per unit of fuel read from `FromAP` and `FromTrans` | Revenues, GDP and welfare |
 | 19 | Welfare and externalities: climate damages, efficiency costs, co-benefits, efficient prices and their cost components | Revenues, GDP and welfare |
 
@@ -140,6 +136,8 @@ Q(t) = Q(t−1) · (efficiency gain) · (1 + GDP growth)^(income elasticity) · 
 
 The elasticities are legacy CPAT's. By default road fuel use follows these elasticities as every other sector. With `TrModel` = Engineer, the road engineer model of section 5 replaces it: vehicle stocks by class, cost of ownership, the choice between combustion and electric vehicles, and vehicle policies (feebates, EV subsidies, purchase taxes, distance tax). Section 5 is computed in every scenario either way, so the two approaches can be compared. In the buildings section, a block moves part of the most-used cooking fuel to biomass when its price rises (leakage). Section 10 adds up fuel use by sector and fuel, including the fuel burnt in power plants.
 
+**Fuels.** The nine fuels (coal, gas, gasoline, diesel, LPG, kerosene, jet fuel, other oil products, biomass) are one list in the builder (`FUELS` in `build.py`): every block of every subsector, the emission-factor and air-pollutant lookups and every total follow it. A new fuel is added there (with the price build-up it uses and, until the data have its own rows, the fuel whose data it reads), not by copying rows in the workbook: a copied row reads the wrong rows of the parallel blocks.
+
 ### Exports to the other modules (sections 11 and 15)
 
 Sections with a blue band hold what other modules read, by code. Section 11 comes right after energy consumption: block 11a (defined name `ExportDistn`) is the input of the Distribution module (household effects by decile in one analysis year). The Master copies it into the distribution workbook (*Distribution from Mitigation*). Block 11b holds the outputs of the road model (section 5) for the transport co-benefits module. Section 15, the local air pollutants, is what the air-pollution module will read.
@@ -172,7 +170,7 @@ fiscal space fs(t)  = (new revenue in the scenario − in the baseline) / GDP
 GDP effect          = Σ over uses: share of the use · Σ over lags (change in fs · multiplier of the use)
 ```
 
-The GDP effect feeds back into GDP growth (section 1), which drives fuel use. Section 17 reports carbon prices, coverage and the effective carbon rate. Section 18 reads the damages per unit of fuel from the air-pollution and transport co-benefits modules; section 19 values the climate damages avoided, the efficiency costs and the co-benefits, and gives the efficient prices with their cost components.
+The GDP effect feeds back into GDP growth (section 1), which drives fuel use. Section 17 reports carbon prices, coverage, the effective carbon rate, and the Total Carbon Price (price signals per tonne weighted by CO2) and Total Effective Carbon Price (the same signals weighted by the emission cut from a uniform carbon tax; a uniform 1 USD/tCO2 tax adds 1 to both). Section 18 reads the damages per unit of fuel from the air-pollution and transport co-benefits modules; section 19 values the climate damages avoided, the efficiency costs and the co-benefits, and gives the efficient prices with their cost components.
 
 ## Results
 
@@ -180,7 +178,7 @@ The GDP effect feeds back into GDP growth (section 1), which drives fuel use. Se
 
 **Output codes.** Each row carries a code built from its parts, `<module>.<variable>.<sector>.<fuel>[.<suffix>]` (columns B and D:G). The full code adds the country in front and the scenario number at the end: for example `egy.mit.co2.tot.tot.2` is Egypt's total CO₂ from fuel combustion in scenario 2. The cost components of the efficient prices are coded `cost.<sector>.<fuel>.<component>`. The names come from the same dictionary as Mitigation's labels. The codes are those of CPAT Python; the codes map `excel_ai/core/CPAT-AI_CodesMap_v<version>.xlsx` lists the code protocol, the vocabularies, the variables, the output codes and every input (its MTInputs row, its name and its Python key).
 
-**Dashboard and Diagnostic** show the key numbers and charts of the live scenarios, read from `Outputs` by code. Some of their panels still hold dummy data (pale orange) until the data or the other modules deliver them.
+**Dashboard, Comparison, Climate and Fiscal** show the key numbers and charts of the live scenarios, read from `Output Data` by code. Some of their panels still hold dummy data (pale orange) until the data or the other modules deliver them (household impacts by decile, household energy spending). The effective carbon rates by sector (Diagnostic) are model rows of section 17; the averted deaths (Dashboard) are an interim estimate from the value of averted ambient PM2.5 over a value of a statistical life (section 18), until the air-pollution module computes deaths.
 
 **Stored results** are in the Master: `StoredResults` (values, one row per output per run, keyed by country, scenario ID and code; tab `Indicators` chooses which rows a run stores), `Scenario comparison`, `OneCountry` and `ManyCountries` (tables and charts read from `StoredResults`). *Save results to .csv* writes `StoredResults` to a file. Details: *Running many scenarios*.
 
@@ -209,7 +207,7 @@ The ten major issues keep their former issue codes in the register. The bugs, wi
 - **Legacy row numbers** in the method notes are rows of `CPAT 1.0pre_456_NoPropData.xlsb`, the file the prototype was built against; in `CPAT 1.0pre_465` the Mitigation rows from 5667 on sit 11 to 15 rows higher. The input tab `Scenarios` has the rows of the 465 MTInputs.
 - **Not built:** a few legacy features (upgrades U), the air-pollution calculations and the transport co-benefits module.
 
-**Next steps.** A user interface (the specification is in `excel_ai/bugs_and_legacy/ui_spec/`: a mock-up and the core graphs of country reports); model settings split from policy inputs; the other modules (distribution started, air pollution, transport co-benefits); the full set of core graphs in the Master; the real data behind the dummy panels of `Dashboard` and `Diagnostic`.
+**Next steps.** (The user interface, tab `User-defined`, and the split of model settings from policy inputs were done in 1.9.35-1.9.41.) the other modules (distribution started, air pollution, transport co-benefits); the full set of core graphs in the Master; the real data behind the dummy panels of `Dashboard` and `Diagnostic`.
 
 ## Running many scenarios {#sec-many-scenarios}
 
@@ -223,7 +221,7 @@ The mitigation workbook calculates four scenarios at a time, one group of column
 
 | Place | What it holds |
 |---|---|
-| Dashboard (mitigation workbook) | The country and the **policy scenario** of Mitigation group 2, chosen by its name from tab Scenarios (`PolicyName`; its number `PolicyScen`); key numbers and charts of the live scenarios. |
+| Dashboard (mitigation workbook) | The country and the **policy scenario** of Mitigation group 2, chosen by its name from tab Pre-defined (Scenarios before 1.9.41; `PolicyName`; its number `PolicyScen`); key numbers and charts of the live scenarios. |
 | Cover (mitigation workbook) | The live scenario groups at activation (`LiveGroups`, 2, 3 or 4; default 4), the scenarios of groups 3 and 4 by name (`DashG3`, `DashG4`), the data transfer choices, the status written by the Master. |
 | Scenarios, column G | Scenario 1, the **baseline** (ID `BASE`). |
 | Scenarios, columns H onwards | One column per **scenario definition**: short name (row 2, the legend in the charts), number (row 5), name (row 6), ID (row 7: `P1`-`P5` the presets, `U1`, `U2`, ... user scenarios), then the inputs, in the rows of legacy MTInputs. The last three columns (AX-AZ) are the Master's run columns: a batch writes its scenarios there. |
@@ -267,7 +265,7 @@ Run scenarios is the button of the MT's (the Master's) tab `Dashboard`; Activate
 - **Update data**: refreshes the linked data tabs of the activated mitigation workbook by Power Query, from the source and the rows chosen on the Master's Dashboard (the module's Cover can override), and saves the workbook.
 - **Run scenarios**: every country of the Dashboard's list with every scenario of its list. Countries without data are reported before the run starts. Per country: the country is set, the baseline (the Master's `BASE`) is stored once, and the other scenarios are sent by `NameOfParameter` to the run columns in batches of three, one per live group 2-4, with one recalculation per batch. A batch with an ETS scenario runs the goal seek on every such group at once. Each run is stored in StoredResults (the rows with Include = Yes). The Dashboard shows the progress and the measured run time; at the end the module's dashboard, scenario 1, the ETS overrides and the calculation mode are restored, and the results are written to a .csv when the Dashboard says Yes.
 - **Estimate run time**: times one full recalculation and estimates the run of the Dashboard's lists.
-- **Store live scenarios**: stores every live group of Outputs in StoredResults, under the module's country and the scenario IDs of its tab Scenarios.
+- **Store live scenarios**: stores every live group of Output Data (Outputs before 1.9.40) in StoredResults, under the module's country and the scenario IDs of its tab Pre-defined (Scenarios before 1.9.41).
 - **Sync scenarios to Mitigation**, **Send scenario to Mitigation**, **Get live scenario**: write the Master's scenario table into the module; send the scenario shown on the Dashboard into group 2; add group 2's scenario to the Master's table as the next user scenario.
 - **Goal-seek ETS price (live)** and **Achieve NDCs (live)**: the ETS price path that meets the cap of group 2's scenario; the carbon tax of group 2's scenario scaled until GHG emissions meet the NDC target in the target year.
 - **Distribution from Mitigation**: copies the export block of Mitigation (section 11a, defined name `ExportDistn`) into `FromMitigation` of the activated distribution workbook, by code (it stops if the rows do not match), recalculates and saves it.

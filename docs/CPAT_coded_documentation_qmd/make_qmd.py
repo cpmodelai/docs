@@ -9,7 +9,7 @@ the generated chapters.
 The guide chapters (index, 01 Using the model, 02 How it works, and `_glossary.md`, which appendix B includes) are
 written here, in this folder (since 2026-10-30; merged into two chapters 2026-10-31). Two appendices: A data, inputs
 and variables, B project documents. The equation list is in the CPAT-AI Model book (../CPAT_model_documentation_qmd/,
-since 2026-10-31), shared with Excel-AI. Sources of the appendices: the equation lists, `data/Public01/tidy/_manifest.csv`
+since 2026-10-31), shared with Excel-AI. Sources of the appendices: the equation lists, `data/Default/tidy/_manifest.csv`
 (database tables), `data/inputs/scenarios_excel_ai.csv` (inputs), `coded/cpat_model/core/variables.csv` (variables),
 `coded/cpat_testing/compare/known_differences.py` and the bugs section of `coded/TODO.md` (bugs), the spec, the norms
 and the plan.
@@ -62,7 +62,7 @@ def convert_qmd(src_rel, title, sec_id):
 
 
 def database_tables():
-    path = os.path.join(REPO, 'data', 'Public01', 'tidy')
+    path = os.path.join(REPO, 'data', 'Default', 'tidy')
     with open(os.path.join(path, '_manifest.csv'), encoding='utf-8') as f:
         man = list(csv.DictReader(f))
     rows = []
@@ -71,11 +71,11 @@ def database_tables():
             cols = next(csv.reader(f), [])
         rows.append((f"`{m['table']}`", ', '.join(cols), m['keys'], m['rows'], m['legacy_tab'],
                      'yes' if m['proprietary'] == 'yes' else ''))
-    intro = (f'Every table of the database (`data/Public01/tidy/`, {len(rows)} tables; source `data/Public01/tidy/_manifest.csv`): its '
+    intro = (f'Every table of the database (`data/Default/tidy/`, {len(rows)} tables; source `data/Default/tidy/_manifest.csv`): its '
              'columns, the keys of a row, the number of rows in the dummy database, the legacy tab it comes from, and '
              'whether it is proprietary (energy consumption is treated as proprietary too, with the energy balances). '
              'Column meanings and units: `data/README.md` and `data/catalog.csv`.\n\n')
-    return chapter('Database tables', 'sec-app-tables', 'data/Public01/tidy/_manifest.csv',
+    return chapter('Database tables', 'sec-app-tables', 'data/Default/tidy/_manifest.csv',
                    intro + table(['Table', 'Columns', 'Keys', 'Rows', 'Legacy tab', 'Proprietary'], rows))
 
 

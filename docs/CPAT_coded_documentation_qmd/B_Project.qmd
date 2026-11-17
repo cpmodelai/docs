@@ -656,7 +656,7 @@ The design choices behind these rules (D1-D16) were decided by the user on 2026-
 2. **Which version (D14).** The version of Coded CPAT is `<Excel-AI version>p<Python version>`, e.g. `1.0.0p1.0`: Python version 1.0 of the replication of Excel-AI 1.0.0 (Excel-AI's numbering was rebased on 2026-10-29: mitigation 9.0 is 0.9.0, distribution 1.3 is 0.1.3). The package states both (`EXCEL_AI_VERSION`, `__version__`), and each module docstring the Excel-AI version it replicates. Moving to a new Excel-AI version is a task of its own: port the changed rows (the Excel version log and `../excel_ai/core/CAVEATS.md` list them), then rerun the comparison.
 3. **Bugs are not replicated; issues are (user rules 2026-10-29; root `NORMS.md` section 0 rule 6).** Coded CPAT follows Excel-AI everywhere except in its bugs. A prototype bug (`M`: Excel-AI does not compute what it means to) is never replicated: register it the same day (`OPEN_PROTO_BUGS` in `../excel_ai/bugs_and_legacy/register/issues_register.py`), add its fix to the Excel-AI TODO list (`../excel_ai/core/TODO.md`), fix it here where the fix is obvious (a comment `# bug M<n> fixed (Excel-AI: ...)` at the line), list the codes that then differ from Excel-AI in `cpat_testing/compare/known_differences.py` (the tests check they differ), note it on `TODO.md` (section "Excel-AI bugs") and tell the user. Where the fix is not obvious, keep Excel-AI's formula (`# Excel-AI bug M<n>, replicated until ...`) and follow the prototype's fixed version. An issue (a potential improvement) is logged for later and replicated for now. Never change Excel-AI's behaviour silently.
 4. **Codes are shared.** Variable codes, input names (`NameOfParameter`) and output codes are those of Excel-AI and the codes map `../excel_ai/core/CPAT-AI_CodesMap_v<version>.xlsx`. Python never invents a second name for a quantity that has a code.
-5. **One register.** Bugs and issues found while porting go in the one register (`../excel_ai/bugs_and_legacy/register/issues_register.py`; root `NORMS.md` section 0 rule 3), with module "Coded CPAT" where only Python is affected. Coded CPAT keeps no list of its own.
+5. **One register.** Bugs and issues found while porting go in the one register (`../excel_ai/bugs_and_legacy/register/issues_register.py`; root `NORMS.md` section 0 rule 3), with module "Coded CPAT" where only Python is affected. Coded CPAT keeps no list of its own. A defect of Coded CPAT's own code (the method is right, the program is wrong: a shape, an order, a value read from the wrong country) is a **Coded CPAT bug, kind `CB`** (`CODED_BUGS` in the register; user 2026-11-16), kept apart from the model discrepancies (L, M, DOC): it is fixed here with a test, and Excel-AI is not affected.
 
 ### Readability: equations, names, comments
 
@@ -677,7 +677,7 @@ The purpose of the code is that a person with the equation list open can find, r
 3. **The equation list and the code agree.** An equation added, removed or changed in the code is changed in the equation list in the same task, and the other way round. A test lists every equation id and fails if one has no function or one function cites an unknown id.
 4. **No hard-coded numbers.** Apart from 0, 1 and array positions, every number comes from the inputs, the data or a named constant in `cpat_model/core/constants.py` with its source and unit (as root `NORMS.md` section 3, "No hard-coded constants").
 5. **Units in the registry, conversions in one place.** Money units follow the Excel-AI vocabulary (`USD m`, `LCU bn`, `USD/GJ`, real or nominal; root `NORMS.md` section 3, "Money units"). A function body does not multiply by `1e3`, `1e6` or `1e9`; it calls a named conversion.
-6. **Short and flat.** A function that needs scrolling is split. No clever one-liners, no metaprogramming in model code, no inheritance deeper than one level. Prefer explicit arguments to reading a global state.
+6. **Short and flat.** A function that needs scrolling is split. No clever one-liners, no metaprogramming in model code, no inheritance deeper than one level. Prefer explicit arguments to reading a global state. **A block is the exception** (user 2026-11-16): a block function (`prepare`, `step`, ...) follows the sections of its Excel-AI sheet in order, each under a comment with its rows (`# TCO of freight vehicles (rows 4193-4214)`), and is not split mechanically: its sections pass many rows to each other, and cut functions would take 15-30 arguments. It says so on the line above it (`# pylint: disable-next=too-many-locals,too-many-statements`). Limits elsewhere (`pyproject.toml`): 10 arguments (the six of a block; an equation's symbols), 30 locals (a data step names each row it reads), 50 statements. The app's `server()` is one function per tab (`_user_defined`, `_scenario_set`, ...).
 7. **Comments say why, not what.** The docstring says what; a comment explains a choice, an Excel-AI quirk (with its register code, e.g. `# I85: percentages typed as whole numbers, as legacy`) or a unit.
 
 ### Where things go (folders and files)
@@ -729,7 +729,7 @@ The purpose of the code is that a person with the equation list open can find, r
 2. **Diagrams** are mermaid blocks in the qmd (Quarto draws them); `make_docs.py` renders them to PNG for Word.
 3. **Notation.** The equation list uses the Greek letters and index letters of the methodology (`../docs/01_MainDocumentation/`); where the methodology has none, it says so and uses the Excel-AI note (`../excel_ai/mitigation/docs/Equations.md`). Its code version uses the codes map.
 4. **Methodology, not history** (root `NORMS.md` section 7): the equation list and method notes describe the current model only.
-5. **The documentation book (user 2026-10-29; restructured 2026-10-31).** The Coded CPAT documentation is a Quarto book, the website's **CPAT Python** tab (`#python`), in the style of the methodology documentation: few chapters, each with many sections (user 2026-10-31). Chapter 1 *Using the model* (concise: quick start, the database first, scenarios, results, editing, testing), chapter 2 *How it works*, and two appendices: A data, inputs and variables (with the glossary), B project documents (bugs, spec, norms, plan). The method of each block and the equation list are in the **CPAT-AI Model** book (`../docs/CPAT_model_documentation_qmd/`, tab `#model`, user 2026-10-31), shared with Excel-AI: a change to the method of a block updates its chapter there the same day; the equation list is generated there from `cpat_documentation/equations/equations.yaml`. The chapters are written in `../docs/CPAT_coded_documentation_qmd/` (`index.qmd`, `01_Using_the_model.qmd`, `02_How_it_works.qmd`, `_glossary.md`; was `cpat_documentation/guide/` until 2026-10-30); the appendices are generated from the code and data (`../docs/CPAT_coded_documentation_qmd/make_qmd.py`). New material goes into a section of these chapters, not a new chapter. The latest Coded CPAT deck is `../docs/presentations/03_Coded-CPAT_Overview_latest.pptx`, written by `cpat_documentation/presentation/build_deck.js` and linked at the top of the tab. A task that changes how to run, edit or test the model, the database, the inputs or the results updates its chapter the same day; a task that changes the tests reruns `make_qmd.py --tests` (the test status) before `quarto render`.
+5. **The documentation book (user 2026-10-29; restructured 2026-10-31).** The Coded CPAT documentation is a Quarto book, the website's **CPAT Python** tab (`#python`), in the style of the methodology documentation: few chapters, each with many sections (user 2026-10-31). Chapter 1 *Using the model* (concise: quick start, the database first, scenarios, results, editing, testing), chapter 2 *How it works*, and two appendices: A data, inputs and variables (with the glossary), B project documents (bugs, spec, norms, plan). The method of each block and the equation list are in the **CPAT-AI Model** book (`../docs/CPAT_model_documentation_qmd/`, tab `#model`, user 2026-10-31), shared with Excel-AI: a change to the method of a block updates its chapter there the same day; the equation list is generated there from `cpat_documentation/equations/equations.yaml`. The chapters are written in `../docs/CPAT_coded_documentation_qmd/` (`index.qmd`, `01_Using_the_model.qmd`, `02_How_it_works.qmd`, `_glossary.md`; was `cpat_documentation/guide/` until 2026-10-30); the appendices are generated from the code and data (`../docs/CPAT_coded_documentation_qmd/make_qmd.py`). New material goes into a section of these chapters, not a new chapter. The latest Coded CPAT deck is `../docs/presentations/03_CPAT-AI_Python_latest.pptx`, written by `cpat_documentation/presentation/build_deck.js` and linked at the top of the tab. A task that changes how to run, edit or test the model, the database, the inputs or the results updates its chapter the same day; a task that changes the tests reruns `make_qmd.py --tests` (the test status) before `quarto render`.
 
 ### Task completion and bookkeeping
 
@@ -738,7 +738,13 @@ As root `NORMS.md` section 6: every finished task gets a `../excel_ai/core/CAVEA
 ### Python conventions
 
 - Python 3.12, pandas, numpy, xarray (`environment.yml`, `requirements.txt`); new dependencies only with a reason in the task's `CAVEATS.md` entry.
-- Type hints on public functions; `ruff` for lint and format.
+- **Style: PEP 8, with lines of at most 120 characters** (user 2026-11-16; docstrings carry equations and Excel formulas). The settings are in `pyproject.toml` (`[tool.ruff]`, `[tool.pylint]`), so ruff, pylint and the editor agree.
+- **`ruff` is the one linter and formatter**: `ruff format` (quotes preserved) and `ruff check` pass on every changed file before a commit. Allowed exceptions (in `pyproject.toml`): capitals and single letters inside functions and as arguments, from the equation notation (section 1.2; N803, N806); short named lambdas as local helpers (`col = lambda fn: ...`; E731, user 2026-11-16); modules imported under a capital (`import check_full as C`, as the Excel-AI scripts; N811, N812). Anything else is fixed, or marked at the line with `# noqa: <rule>` and the reason.
+- **A function defined in a loop binds the loop variables it reads as default arguments** (`col(lambda d, f=f: d['prd0'][f])`; ruff B023), even when it is called in the same iteration: the value is then fixed where it is read, and the check stays on for the closures that would be wrong (2026-11-16, TODO "Code quality" C8).
+- **Imports at the top of the file** (ruff PLC0415, 2026-11-16). An import inside a function only to break a loop between two modules (the module imported at the top is the one the other builds on) or to keep a start light (`cpat_model.run`), with the reason in a comment at the line and `# noqa: PLC0415`. Tests and scripts may import inside a function.
+- **One name, one meaning in a function** (2026-11-16: type hints found seven names used for two things in one function, e.g. `g` a fuel group, then the Gini coefficients; `ratio` an array, then a helper). A new quantity gets a new name; a name with a CPAT code keeps the code (section 1.2) and the other quantity is renamed.
+- **Sums run over lists or tuples, never sets**: a set's order changes from one Python process to the next, and so does the last bit of a floating-point sum (`tcp.all.all`, 2026-11-16). Results must be identical from run to run. `zip()` states `strict=` (True where the lengths must match).
+- **Type hints** on every function in `cpat_model/` (arguments and return), starting with the public API; quantities are `xr.DataArray` (or `np.ndarray` for the rows of a block), tables `pd.DataFrame`, an input cell `inputs.scenarios.Value`, a block `mitigation.chain.PrepareBlock` / `YearBlock`. Every annotated module starts with `from __future__ import annotations`; a type needed only for annotations is imported under `if TYPE_CHECKING:` (no import loop, no cost at run time). mypy (`pyproject.toml`) checks the modules done so far, and the list grows layer by layer. Run it as `python -m mypy` from `coded/`, in the environment of `requirements.txt` and `dev-requirements.txt`: a mypy installed elsewhere reads no types of numpy, pandas or xarray and passes code the GitHub check fails (2026-11-16). New and changed functions get them now; the rest follows `TODO.md`, "Code quality".
 - Functions are pure: inputs in, results out, no file or global state inside model code. Reading files happens in `cpat_model/data/` and `cpat_model/inputs/` only.
 - The one public entry point is `cpat_model.run(...)` (spec section 3); `run_model.py`, the Shiny app and the tests all call it.
 
@@ -751,6 +757,214 @@ As root `NORMS.md` section 6: every finished task gets a `../excel_ai/core/CAVEA
 Status key: ☐ not started · ◐ in progress · ☑ done · ☒ closed without doing (superseded) (ticked items leave at the next update; their record is [`../excel_ai/core/CAVEATS.md`](https://github.com/cpmodelai/cpat_ai/blob/main/excel_ai/core/CAVEATS.md)). Excel work: [`../excel_ai/core/TODO.md`](https://github.com/cpmodelai/cpat_ai/blob/main/excel_ai/core/TODO.md). Rules: [`NORMS.md`](https://github.com/cpmodelai/cpat_ai/blob/main/coded/NORMS.md).
 
 **The project (user 2026-10-29): the full build of Coded CPAT**, a human-readable Python model that replicates the mitigation and distribution modules of Excel-AI number for number. Specification, design choices and the plan in words: [`cpat_documentation/project/Spec.qmd`](https://github.com/cpmodelai/cpat_ai/blob/main/coded/cpat_documentation/project/Spec.qmd) (Word copy `Spec.docx`). The phases below are the plan's checklist; section numbers refer to the spec.
+
+### Code quality: PEP 8, lint, type hints (user 2026-11-16: "first create a list of improvements and then apply changes")
+
+Measured 2026-11-16 on `coded/` (121 files, about 13,700 lines): 3,632 lines over 79 characters, 2,139 over 100
+(pylint's default), 145 over 120 (the de facto limit; longest 195); `ruff format --check` would reformat 115 of 131
+files; pylint 5.88/10 on `cpat_model/`; 102 of 623 public functions have type hints. Rule: [`NORMS.md`](https://github.com/cpmodelai/cpat_ai/blob/main/coded/NORMS.md)
+section 10. Every step: `pytest` passes and the comparison with Excel-AI is unchanged (no number may move). **Version and `CHANGELOG.md`: once, when every step here is done** (user 2026-11-16; the fixes CB1-CB3 go into that release's row).
+
+**A. Rules and tooling**
+- ☑ A1. The style rule in `NORMS.md` section 10: PEP 8 with a 120-character line, ruff the one linter and formatter, type hints, the naming exceptions of the equation notation.
+- ☑ A2. Tool configuration in `pyproject.toml` (`[tool.ruff]`, `[tool.ruff.format]`, `[tool.pylint]`, all 120 characters); ruff in `dev-requirements.txt`.
+- ☑ A2b. `.vscode/settings.json` at the repository root: pylint and ruff read `coded/pyproject.toml`, ruler at 120 (user 2026-11-16).
+- ☑ A3. GitHub Actions check `.github/workflows/coded-lint.yml` (2026-11-16): `ruff check` and `ruff format --check` on `coded/` on every push and pull request that changes it, ruff at the version of `dev-requirements.txt`. pytest not in it (it reads the data editions; about 2 minutes): a possible next job.
+- ☑ A4. Naming exceptions in the configuration (N803, N806: capitals and single letters of the equation notation, NORMS 1.2).
+
+**B. Mechanical clean-up (no change to results)**
+- ☑ B5. `ruff format` on every file (115 reformatted, quotes preserved; 2026-11-16): code unchanged (syntax trees equal but for docstring whitespace), pytest 86 passed and 11 skipped before and after, Egypt results identical (mitigation, distribution, TCB). `ruff check` now 391 findings (was 506).
+- ☑ B6. `ruff check --fix` (2026-11-16): 37 fixes in 13 files: unused imports (none imported elsewhere), `typing.Dict/List/Optional/Callable` to built-in and `collections.abc` forms, `@lru_cache(maxsize=None)` to `@cache`, one import per line, an f-string without placeholders, the utf-8 declaration, `open(..., "r")`.
+- ☑ B7. Lines over 120 characters (2026-11-16): 33 left after B5, all shortened: docstrings and comments reflowed (whitespace only), strings split by implicit concatenation with the text unchanged (fuel_use, legacy_comparison), the JS of make_docs, the CSS of head.py and the scripts written by deploy/ wrapped with the same result. `ruff check`: 323 findings left (step C), none E501.
+
+**C. Review by hand (may hide real defects)**
+- ☑ C8. Closures reading a loop variable (2026-11-16): all 41 (55 findings, 10 files) reviewed; none was a defect: each is called in the iteration that defines it (through `col`, `grid`, `sum`, `S.put`, or `cached`, which calls `fn` at once or returns a stored result, never `fn`). Each now binds the variables as default arguments (`v=v`), so B023 stays on (rule: `NORMS.md` section 10).
+- ☑ C9. Unused variables and loop variables (2026-11-16): the 12 F841 and 12 B007 reviewed, none a defect (`impp`, `pitcum` are rows stored by `R.set`/`S.put` and read by name; `g` of `DPA` is used by the next loop). Removed: unused `col`, `D`, `G`, `n`, `p`, `ela`, `sp0`, `q0`; unused names of `R.set`/`S.put` results dropped; unused parts of unpacked tuples prefixed `_` (`road.py`, `incidence.py`). The 68 unused arguments of pylint: the shared block signature, left as they are.
+- ☑ C10. `zip()` without `strict=` (83): `strict=True` where the lengths must match. Done 2026-11-16: 82 `strict=True` (columns of one table, values of one array, the 3 TCB welfare lines and their 3 colours, the 17 columns of `extract_excel_ai.py`), 1 `strict=False` (`extract_excel_ai.stored`: a worksheet row may end before the last year).
+- ☑ C10b. Found while checking C8-C10 on 12 countries: `tcp.all.all` summed the power revenue over a **set** (`emissions.carbon_pricing`), so its last bit (about 1e-16 relative) changed with the Python process (hash seed). Now a tuple: results are the same for every seed (rule: `NORMS.md` section 10).
+- ☑ C10c. **Bug (Coded CPAT only), fixed 2026-11-16: a run of two or more countries in one call failed** in the transport co-benefits module (`ValueError: could not broadcast ... (2,2) into (2,)`): `module.common_paths` shaped the congestion elasticities (country, 1), `equations.congestion_path` (EQ-T1.5) applies them year by year to (country,) slices. Now (country,). Affected before the fix: `cpat-run` / `run_model.py --countries A B` (`cli.py:37`, one call for all countries) and the app with several countries; one country was always right. Found with it (latent): the methane intensity (`ch4.int`) and the stored CH4 check (`kc`, `emissions.ghg`) used the **first country's** latest GHG inventory year for every country; now each country's own (`emissions._decline_since`, the power taken per group of equal years so the results stay bit-identical). No effect on the Default data (2024 for all 235 countries). Test `cpat_testing/test_multi_country.py`: EGY and KEN together equal each alone within 1e-9 (not exactly: NumPy's vectorised power and exp round the last bit by array length; measured at most 1.2e-12), and the inventory-year rule by hand. Open: other places read the first country for **structure** (price codes, row positions, key lists: `fuel_use`, `power`, `tecp`, `prices`, `road`, `header`), the same for every country by construction; not checked one by one. Register: CB1, CB2 (and CB3 for C10b), kind `CB` (Coded CPAT bug), user 2026-11-16.
+- ☑ C11. Lambdas assigned to names (139, E731), 2026-11-16: allowed (user: short named lambdas as local helpers are the code's style), with modules imported under a capital (N811, N812, as the Excel-AI scripts); the last 8 findings fixed (`np.dtype(object)`, `stacklevel=2`, `l` -> `lag`, `raise ... from e` twice) or marked (`road.N`, named after Excel's N()). `ruff check` and `ruff format --check`: clean.
+- ☑ C12. Imports inside functions (2026-11-16): 47 in the model, app and CLI (39 more in tests and scripts, allowed). 42 moved to the top (no reason: the standard library, pandas, xarray, and model imports that form no loop). Kept, each with its reason at the line: `gdp` -> `totals` (a loop: `totals` imports `gdp.year_rows`), `codes` -> `variables` (a two-way dependency: one direction must wait; `variables` -> `codes` moved to the top), `cpat_model.run` -> `core.loop` (keeps `import cpat_model` at about 25 ms instead of 0.5 s), `build_page` -> Excel-AI's page modules (not a package; importing `ui_spec` builds the page). Proved by moving each to the top in a copy (only `gdp` -> `totals` and moving both `codes`/`variables` break an import) and by importing all 87 modules first and alone (0 failures). Rule PLC0415 on in `pyproject.toml` (tests, scripts and `deploy/` exempt).
+
+**D. Type hints**
+- ☑ D13. Type hints, layer by layer; mypy (`pyproject.toml` `[tool.mypy]`, `files`: the layers done; every function there fully annotated) in `dev-requirements.txt` and the GitHub check.
+  - ☑ Layer 1, the public API (2026-11-16): `cpat_model.run`, `settings.py` (`Settings`, the edition functions), `inputs/` (`Inputs`, `ScenarioSet`, `read_scenario_set`; an input cell is `Value = float | str | None`), `results/` (`Results`, `flatten`), `data/` (`Database`, `to_float`, `open_database`), `core/loop.py`, and the block signatures in `mitigation/chain.py` (`PrepareBlock`, `YearBlock`). mypy found one thing: `run_one` reused the loop variable `block` for prepare and year blocks (two signatures); renamed `year_block`.
+  - ☑ Layer 2, `core/`, `cli.py` and the module entry points (2026-11-16): `rows.py` (`Rows`; `State` as `dict[str, Any]`, whose `keys`/`items`/`values`/`update` return lists, marked `type: ignore[override]`; `cached[T]`; type aliases `RowValues`, `Index`, `RawRow`), `codes.py`, `variables.py`, `excel_ai_tables.py`, `module_values.py`, `paths.py`, `cli.py`, `air_pollution/__init__.py`, `transport_cobenefits/__init__.py`. Code changes, results identical: `excel_ai_tables.constant(key) -> float` (86 of 87 constants are numbers) and `text_constant` for the text one (`ScnMain`, its one caller in `policies.py`); `codes._body` raises a clear error for a non-Mitigation code (was a TypeError); `Rows.of` and `Rows.finish` restructured so the types follow the code (no early return; the rows of a (sector, fuel) named `grid`); `results.flatten`'s second `slot` renamed `known`. Speed unchanged (test_speed: 1.09-1.12 s after, 1.11-1.21 s before, same machine).
+  - ☑ Layer 3, the model (2026-11-16): `mitigation/` (every block and `*_data.py`), `distribution/`, `transport_cobenefits/`, `forms/`, 240 functions. The annotations come from the types recorded while the test suite ran (a profiler hook on every call: several countries, both road models, the instruments, distribution, TCB), then mypy over the equation code and fixes by hand. Decisions: `Inputs.__getitem__ -> Any` (which inputs are numbers is fixed by Excel-AI's rows; the model uses `inputs[...]` in arithmetic), `Settings.baseline_inputs` (the baseline's inputs, an error before `with_globals`; 12 uses), `WeoSeries` (header), `Rows.base` declared (was set on the fly by `totals.reference`). Code made clearer, results identical: 7 names that held two things in one function renamed (`incidence` `g` -> `ginis`, `prices` `k` -> `fuel` and `adj_text`, `road` `ratio` -> `station_ratio`, `policies` `reg` (medians) -> `semi_medians`, `pigouvian` `eu`/`ef` -> `road_eu`/`road_ef`, `transport_cobenefits.module` `key` -> `name`; rule in NORMS 10); `functools.partial` for the 4 cached data steps (was `lambda iso=iso:`); `prices.psd` an if/else (was a dict of lambdas called at once); `emissions._one_plus`, `_at_year` (were lambdas calling `_value` twice); `header.macro_series` reads each series once; `gdp.recycled_share` reads `xt.constant`.
+  - ☑ Layer 4, the app (2026-11-16): `cpat_shiny/` and `app.py`, 142 functions: the handlers in `server()` by their decorator (`@reactive.effect` -> None, `@render.ui` -> TagChild, `@render.text` -> str, `@render.download` -> Iterator, `@render_widget` -> go.Figure), the helpers from the types recorded by the app's tests, the rest by hand; the reactive values declared (`reactive.Value[list[Scenario]]`, ...). mypy now checks the model and the app (`files = ["cpat_model", "cpat_shiny", "app.py"]`; `explicit_package_bases`: cpat_shiny has no `__init__.py`). Code made clearer, the page identical: `results_section_card` and `multiple_selectize` return their element (were a one-element tuple, a stray comma); `section_selection` returns None explicitly; `ui.components.common.col_widths` (typed column widths; shiny 1.1 has no `ui.breakpoints`); `scenario_files` set of names `used`; `apply_results_filters_indicators` reads the table once; `req(run is not None)` followed by `assert` (for the type checker) where a run is needed; the labels typed `dict[str, Any]`; imports of cpat_shiny sorted.
+- ☐ D14. The app's browser console shows plotly's "Resize must be passed a displayed plot div element" (about 180 times in one session: charts on hidden tabs resized); found 2026-11-16, the same before and after D13; the charts are right. Look at it with the dashboard's next change.
+- ☐ D15. **Leftovers of the older app in `cpat_shiny/`** (found 2026-11-16; the app runs the new model, `cpat_model.run`, and every result view reads `Results.by_code`). **Wait for the air-pollution work** (user 2026-11-16: the hand-coded air-pollution code, outside this repository, is to be connected to Coded CPAT in the coming days; some of these may belong to it):
+  - `cpat_shiny/mapping.py` defines `COUNTRY_TO_REGION`, `COUNTRY_TO_IFS_CODE`, `COUNTRY_TO_INCOME_GROUP`, `AIR_POLLUTION_VARIABLES`, `AP_SECTORS`, `AP_INDICATORS`, read by nothing in the app or the tests: remove, or use them in the air-pollution integration.
+  - `cpat_shiny/mappings.xlsx` (sheets Countries, Regions, Country to Region, Income Groups, Country to IFS codes): `ALL_COUNTRIES` (country names) is a second source beside the data editions (`data/<edition>/tidy`); take the names from the edition and retire the workbook.
+  - The Results tab's Documentation section shows `cpat_documentation/user/mitigation.md` and `gdp_prices.md` ("the CPAT Python mitigation module"), written before the rebuild and the generated equation list: replace with the equation list (or a link to the CPAT-AI Model book), or bring up to date.
+  - The Results tab's frame (section switcher; raw-results, indicators and graphs panels and their input handling, `server_logic/reactive/`, `validation/`) is the older app's structure, fed by the new results: review with the rest.
+
+**E. Larger refactors (optional, later)**
+- ☑ E14. Long functions (2026-11-16, user: steps 1 and 2): measured first: the 16 functions over 50 statements are blocks (`road._year` 407, `power.step` 206, ...) that follow Excel-AI's sections; in `road._year` each section reads 5-31 rows of the earlier ones, so cutting there gives functions of 15-30 arguments. Of the 54 with many arguments, 24 are the block signature and 15 equations (their symbols). Done: the rule in NORMS 1.6 (a block is not split; it says so above its def line; pylint limits 10 arguments, 30 locals, 50 statements in `pyproject.toml`); the app's `server()` (137 statements) split into one function per tab (`_user_defined`, `_scenario_set` returning `choice`, `_data`, `_run`, `_dashboard`, `_results`), the 56 handlers unchanged and registered in the same order. Kept: `fuel_data.fuel_table` (10 arguments, each a piece of the country's data); `road._fuel_use` (25 arguments: an earlier split of `_year`, see E16). pylint (R0913-R0917): nothing left.
+- ☐ E16. **Option (user 2026-11-16: for later)**: sections of a block that read their inputs by code from the state (`x('trvkm.pas.all')`, as Excel's cells read rows) instead of Python variables passed along, so a block's sections can stand alone as functions (e.g. `road._year`: 15 sections, each reading 5-31 rows of the earlier ones; `road._fuel_use` takes 25 of them as arguments today). Mirrors Excel-AI more closely; a project of its own (speed: a read by code costs more than a local; verification: every block bit-identical, as C8-D13).
+
+### Shiny app on Excel-AI's User-defined page (user 2026-11-15: "a new shiny interface, based on the Excel")
+
+Done: `cpat_shiny/` rebuilt (`shiny run app.py`; screenshots `cpat_documentation/app_screenshot.png`,
+`app_dashboard.png`). Tabs: **User-defined scenario** (Excel-AI 1.9.56's tab: sections Scenario, A-F and the global
+policies; 531 controls generated from `../excel_ai/mitigation/policy_ui/ui_spec.py` through
+`cpat_shiny/user_defined/page.json`, written by `python -m cpat_shiny.user_defined.build_page`; defaults = the tab's
+values in the latest workbook), **Scenarios and run** (countries, price source; the scenario set: add, edit, remove,
+upload and download CSV in the Pre-defined layout; run), **Data** (upload tidy tables or an edition zip, server-side
+temporary folder), **Dashboard** (key results by scenario: carbon price, CO2, revenue, GDP, prices, distribution,
+transport co-benefits), **Results** (graphs, raw results XLSX, indicators XLSX, documentation). The adapter
+`server_logic/run_model.py` builds each column as Excel-AI's Pre-defined (the page's inputs, the derived `.m` rows by
+Excel-AI's formulas, the template for the rest): the default scenario equals Excel-AI's scenario 2 on every row
+(`test_default_user_scenario_is_excel_ai_scenario_2`; also equal to column 2 of `../data/inputs/scenarios_excel_ai.csv`).
+
+1. ☐ Information cells (grey) of the page are blank: Excel fills them from the data (existing subsidies and taxes,
+   VAT gaps, price controls now) or the model (ETS cap and permit price); fill them from the run's results (not from
+   the data tables, which stay on the server) after a run.
+2. ☐ Excel's information charts of the page (carbon price path, coverage, energy price components, fiscal
+   multipliers, EV share) are not drawn; the Dashboard tab has the results.
+3. ◐ (2026-11-15, user: TrModel and the TCB settings on the app: tab Scenarios and run, panel "Road transport model and
+   transport co-benefits": TrModel, TcbMode and the 12 TCB_<key>; test_transport_settings_reach_the_model) The other
+   settings of tab Settings keep the scenario set's values; expose more if users need them.
+4. ☐ Uploaded user data: the stored baseline table (`inputs/baseline_co2.csv`) stays the edition's when only tables are
+   uploaded (an edition zip brings its own); the model's ETS baseline reads it.
+5. ☐ Publishing (shinyapps.io): the bundle needs `coded/` and `data/Default` (the model reads the edition from the
+   repository); it must not include `excel_ai/` (page.json makes the app independent of it). The run cache of
+   `cpat_model.core.loop` is per process (shared by sessions).
+6. ☐ When Excel-AI's page changes: rerun `build_page` (the test `test_page_json_is_in_step_with_excel_ai_page_specification`
+   fails until then).
+
+### Port to Excel-AI 1.9.56, Distribution 0.6.27, Transport co-benefits 0.1.4 (user 2026-11-15; released as 1.9.56p2.1)
+
+"Fully update the coded CPAT with the new input files and algorithm"; "push to the latest CPAT_AI, including transport
+CB but NOT AP"; "include the update of Distribution". Egypt, scenarios 1-2, 2022-2041, Default:
+
+| | shared codes | within 1e-9 | out of tolerance | reference codes not produced |
+|---|---|---|---|---|
+| Mitigation 1.9.56 (`compare.reference('1.9.56')`) | 17,984 | 17,984 | 0 | 132 (none with values) |
+| engineer road model; instruments variant (`variants/`) | 8,884; 8,884 | all | 0 | 0 |
+| Distribution 0.6.27 (`excel_ai_distribution_0.6.27.csv`) | 1,684 | 1,670 | 14 positions (see 3) | 0 |
+| Transport co-benefits 0.1.4, Legacy; Engineer (`results.tcb_by_code`) | 70; 70 | 70; 70 | 0 | 0 |
+
+1. ☑ Mitigation 1.9.56: reference (LibreOffice equals the stored values: 0 of 18,116 codes differ), engineer and
+   instruments references (the variant now sets ConsSubShare_GsoAll and ticks a price-control line; ETSShare_Ind gone),
+   structure tables, `variables.csv`, scenario set. The extractor finds a table on Settings or Mappings (1.9.56 moved
+   the free-form block, ETS volatility with it, to Mappings). Ported: `etsc` without the group shares; `csp` with the
+   line's own share (EQ-M1.15); AdditionalExcise a run setting; the 13 dissolved Constants read from the settings
+   (`excel_ai_tables.constant_reader`; they were already settings rows of the scenario set). The removed inputs and
+   ShareOfConsSubPha, PrcContPha come from their derived `.m` rows (no code change). 1.9.55 (names) needed nothing.
+2. ☑ Transport co-benefits: `transport_cobenefits/equations.py` (EQ-T1.1-T1.14, appendix C of the equation list) and
+   `module.py`, run after Mitigation on every scenario (core/loop.py); Mitigation keeps the typed FromTrans values
+   (circular otherwise, as Excel-AI). Settings TcbMode (Legacy/Engineer) and TCB_<key> are run settings (D16).
+   Reference `excel_ai_tcb_0.1.4.csv` (`extract_excel_ai.py --tcb`) and `variants/excel_ai_tcb_0.1.4_engineer.csv`
+   (`make_tcb_engineer_reference.py`); test `test_transport_cobenefits.py`.
+3. ☑ Distribution 0.6.27: the coded module (0.5.1) needed no change (Distribution itself unchanged since; its inputs
+   follow Mitigation). The helper rows `hhbk`, `hrow` are row positions in the survey table: Excel-AI's HHSurvey tab
+   holds every country of its build (Egypt from position 3037), the Default edition's tidy table EGY and MAR only; the
+   test checks one constant offset instead of the values. `test_distribution_incidence`, `test_recomputations` run on
+   Default (the recomputation: worst 8.9e-14).
+4. ☐ The TCB reads typed air-pollution values (VSL, daily earnings, deflator: `tcb_from_air_pollution`, Egypt only),
+   as Excel-AI's FromAP; other countries get no accident or congestion values until the air pollution module is built.
+5. ☐ The TCB per-km costs do not feed back to Mitigation (Excel-AI's FromTrans typed, legacy 465 values); a live link
+   needs Excel-AI to solve the circularity first.
+6. ☐ Outside `coded/` (not done: this task writes only in `coded/` and `data/inputs/`): the `../excel_ai/core/CAVEATS.md`
+   entry; the documentation book (`make_qmd.py --tests`, `quarto render`) and the CPAT-AI Model book's equation list
+   (appendix C, T1.1-T1.14; M1.15 changed); the Word copies of the equation list (`make_docs.py`); the git tag
+   `coded-v1.9.56p2.1`.
+7. ☐ Only Egypt checked; Engineer mode of the TCB checked on the shipped scenarios only.
+
+### Port to Excel-AI 1.9.54 (was "Port to Excel-AI 1.9.51"; user 2026-11-14/15; released as 1.9.54p2.0 on 2026-11-15)
+
+Target 1.9.54 instead of 1.9.51 (its outputs equal 1.9.51-1.9.55 but for the intended changes of 1.9.52-1.9.54: the
+non-energy shares and rne in the revenue; 1.9.55 changes no output). Gap (Egypt, scenarios 1-2, against
+`reference/excel_ai_1.9.54.csv`, 2022-2041; `compare.compare(results.by_code('EGY'), ref=compare.reference('1.9.54'))`):
+
+| | shared codes | within 1e-9 | out of tolerance | reference codes not produced |
+|---|---|---|---|---|
+| before (1.5.0p1.16) | 14,952 | 14,899 | 53 | 3,148 (2,992 with values) |
+| after (1.9.54p2.0) | 17,968 | 17,968 | 0 | 132 (none with values) |
+
+Also scenario 2 with the engineer road model (8,876 codes) and scenario 2 with the new instruments switched on
+(`reference/variants/`, 8,876 codes): every code within 1e-9.
+1. ☑ Reference (`make_recalc_reference.py`; LibreOffice equals the stored values: 0 of 18,100 codes differ), engineer
+   reference, structure tables (constants 100 rows, input_rows 613), `variables.csv`, scenario set (tab Pre-defined to
+   row 2000, the derived `.m` rows; the names from row ScenarioName) from 1.9.54.
+2. ☑ Inputs and carbon tax coverage by sector x fuel (ctcov, ctcs; EQ-M1.9); a `.m` input row reads the legacy name;
+   ScenarioSelected is the constant ScnMain; TrModel a setting (global, as 1.9.34: the engineer test runs the baseline
+   on Engineer too); the Shiny app writes the CTCov cells from its fuel and sector choices.
+3. ☑ Price rows: csp (EQ-M1.15), xtf (EQ-M1.12; in pcsw and, for electricity, xte EQ-M4.8), pcs (EQ-M2.7), pset; the
+   ETS share of sector, floor and offsets (ets.flt, fl, ofs, ofp, ofc; EQ-M1.10, M1.11; the market year by year); the
+   existing carbon pricing phase-out (xph); fuel price reform and feebates with each line's own years.
+4. ☑ VAT normalisation: vatg, vnf (EQ-M1.13), vtn in atp, rvt, rnew (EQ-M2.8), vte in pex (EQ-M4.9); scd.
+5. ☑ TCP / TECP (plan 000z): new block `mitigation/tecp.py` (EQ-A7.8-A7.11).
+6. ☑ Non-energy instruments: ner, nep, nec (EQ-M1.14), ghg.cut, ntx, nsb, na5, bgs (EQ-M7.3; GHG net of the cuts),
+   rne in rtot and rpol.ne (EQ-M6.4); cov_etg, cov_fbg (EQ-A7.7); fis.ru (EQ-M8.4); the other-oil efficient price
+   line (EQ-A8.7).
+7. ☐ **Not produced (no values in the reference, nothing to compare):** the parameter rows of the road model
+   (`trp_*`, 60 codes), `ch4_src`, `ch4_abc` (28), `ghg_invb` (2): Excel-AI keeps their values in columns D:G only.
+8. ☑ (2026-11-15: back in data/inputs/scenarios_excel_ai.csv, 1.9.54 layout) **Scenario set location:** `cpat_model.inputs.DEFAULT` is now `cpat_testing/compare/reference/excel_ai_1.9.54_scenarios.csv`
+   (this task could only write in `coded/`). `../data/inputs/scenarios_excel_ai.csv` still has the 1.5.0 layout
+   (MCov flags, ScenarioSelected): the model can no longer run it, and `../data/scripts/build_baseline_co2.py` reads it
+   by default. Copy the 1.9.54 set there (and point DEFAULT back), with the data owner.
+9. ☐ **Tests still on Public01** (skipped on Default): `test_stored_outputs` (1.1.0 stored outputs), `test_data_steps`
+   (the 1.5.0 data step by row and column of sheet Inputs: re-extract for the 1.9.54 layout of the data step),
+   `test_rows_of_excel_ai_1_9_0` (`test_distribution_incidence` and `test_recomputations` re-pinned to Distribution
+   0.6.27 on Default in 1.9.56p2.1). Re-pin
+   each to a reference built on Default; the end-to-end comparison already covers the data steps' results.
+10. ☑ (1.9.56p2.1: Distribution 0.6.27, see above) **Distribution** stays the replication of Distribution 0.5.1 (`DISTRIBUTION_VERSION`); port to the current
+    Distribution release (0.6.x) and re-extract its reference.
+11. ☐ Checked for one country (Egypt) only; every country on the full database (phase 5.2) not rerun.
+12. ☐ Outside `coded/`, not done in this task: the `../excel_ai/core/CAVEATS.md` entry; the documentation book
+    (`../docs/CPAT_coded_documentation_qmd/make_qmd.py --tests`, `quarto render`) and the CPAT-AI Model book's
+    equation list (new ids M1.9-M1.15, M2.7, M2.8, M4.8, M4.9, M6.4, M7.3, M8.4, A7.7-A7.11, A8.7); the git tag
+    `coded-v1.9.54p2.0`.
+13. ☑ (2026-11-15, the new app; section "Shiny app on Excel-AI's User-defined page" below) The app chooses coverage
+    per cell (sector x fuel) and has a control for every input of Excel-AI 1.9.56's tab User-defined.
+14. ☑ (1.9.56p2.1) 1.9.55 (no output change): re-pin when convenient (the scenario name rows changed: check the extractor's names).
+
+### Port from Excel-AI 1.9.30 (builder, 2026-11-11) (superseded by the port to 1.9.54, above)
+
+- ☑ (1.5.0p1.16, 2026-11-12) Issue I164 (user 2026-11-11): electricity externalities from the power fuels: rows `cc.ecy` (nat, glo) and `ecy.del` in section 18; the efficient price of electricity (airpol = apecy x ecy.del of scenario 1, scc = cc.ecy[nat] x ecy.del of scenario 1) and the subsidy block's `extcost` of electricity ((cc.ecy[glo] + apecy) x ecy.del, own scenario). Equations_addendum R2.11, R3.14, R3.15, R3.15b. Excel-AI: `excel_ai/mitigation/build.py` (c18x).
+- ☑ Tests pinned to Public01 (moved out of the repository): 2026-11-15 (1.9.54p2.0) the comparison tests run on Default against Excel-AI 1.9.54 (`test_mitigation`, `test_road_engineer`, `test_instruments`); the Public01 ones are item 9 above.
+
+### Re-pin to Excel-AI 1.9.32 (overnight item 5, measured 2026-11-12)
+
+- ☒ (superseded by the port to 1.9.54) Reference extracted: `cpat_testing/compare/reference/excel_ai_1.9.32.csv` (16,776 codes, LibreOffice equals the release's stored values) and `_engineer.csv`, from release 1.9.32 built on Default (`make_recalc_reference.py` with EXCEL_AI_VERSION 1.9.32; the package still says 1.5.0 until the port passes).
+- ☒ (superseded by the port to 1.9.54: closed there) Gap, Egypt, scenarios 1-2 on Default: 14,958 shared codes, 3,663 out of tolerance; 1,818 reference codes not produced. Most differ from the base year 2022 in em, co2, ghg, bco2, co2_sec, aps, ch4_emf, cost, effprice, extcost, pig: start with the shared roots (the stored baseline table `bco2`, emission factors and methane, I153), then I164 (cc_ecy, scd, cost of electricity), I154 (population), other oil products in the efficient prices (C2), the road rows (trp_*, trint, trvkc: transport parameters), ch4_iny/ch4_a23/ch4_src/ch4_abc, and the 1.9.32 rows (TECP: tsc..tw, tcpw..tecpn, tcpe, tecp, tsgx..tsigp; the division guards of `DIV_GUARDS`; the urban/rural fallback). Script: `compare.compare(results.by_code('EGY'), ref=compare.reference('1.9.32'))`.
+
+### TECP (plan 000z, `../excel_ai/core/plans/TECP_plan.md`)
+
+- ☑ (1.9.54p2.0) C1: the TECP rows of sections 4 and 17 (`mitigation/tecp.py`), equal to Excel-AI 1.9.54. Until then `../tecp_and_validation/tcp_tecp_global.py` computes TCP and TECP from the baseline outside the model (G1).
+
+### Countries without WEO data (2026-11-09, open energy data)
+
+- ☑ `header.py`: WEO aliases (PSE -> WBG, XKX -> KOS); real GDP growth missing in the WEO (American Samoa, Bermuda, Cuba, Curaçao, Cayman, Faroes, Gibraltar, Greenland, Northern Marianas, New Caledonia, North Korea, French Polynesia, Sint Maarten, Turks and Caicos, British Virgin Islands) -> the median growth of the country's region (world median without a region); a WEO series ending before 2018 (Syria) is extended from its last data year. Before: every projected year of these countries was NaN (Syria: KeyError). Coded CPAT only: Excel-AI gives #N/A for them; port the same fallback to Excel-AI's Inputs_macro (TODO 000r).
+- ☑ Industrial natural gas jumping in one year (Venezuela x 3e7, Somalia and Zimbabwe x 4): GDP in USD 1/50-1/2500 of its level (NGDP and the exchange rate in different currency units), so the income-elasticity adjustment exploded; fixed with the NGDPD check (1.5.0p1.10). ☐ Excel-AI's Inputs_macro the same (Liberia was fixed there by hand in 1.9.17).
+
+### Baseline CO2 table for every country from Public02 (user 2026-11-06)
+
+- ☑ Coded CPAT generates Excel-AI's stored scenario-1 table (`data/<edition>/inputs/baseline_co2.csv`, sheet `BaselineCO2`) for any country: `Settings.stored_path`, missing stored rows read 0, `data/scripts/build_baseline_co2.py` (1.5.0p1.8). Open: the full Public02 run and the Excel-AI side, Excel-AI TODO 000q; plan [`../excel_ai/core/plans/BaselineCO2_from_Python.md`](https://github.com/cpmodelai/cpat_ai/blob/main/excel_ai/core/plans/BaselineCO2_from_Python.md).
+
+- ☑ (1.5.0p1.14, 2026-11-11) **ConsGas, ConsCoa, ConsBio with Balances (Excel-AI 1.9.14 fix (a)):** `ghg_data.consumption_total` and `prices.domestic_use` read EnergyCons whatever `BalancesOrConsumption` says; Excel-AI 1.9.14 sums the Balances flows of the legacy EnergyCons mapping when it is Balances. With EnergyCons empty (Public02) Python gives 0 (methane, GHG, revenue). Found by the round trip of `userscripts/prop_data_outputs.py` (2026-11-06: GHG 1.4% EGY, 71% LBR on Public02; 6e-6 on Public01, where EnergyCons is filled). Align at the next re-pin.
+
+### From Excel-AI 1.9.10 (2026-11-06; legacy 468)
+
+- ☑ (1.5.0p1.16) **Population of the macro series** (legacy 468 row 428, L20 as 468 fixed it): `header.py` `s['lp']` from 2026 (`LpUnFromYr`, new constant) = previous year x UN WPP growth (`un_population`, the UNPop table), the WEO path where the country has no UN row; `gdppc` follows. Changes 2,855 Excel-AI output codes from 2027 (power demand via the income factor; Egypt 2040 electricity -2.3%, GHG -1.4%): align at the next re-pin (not a prototype bug: a legacy change adopted). Excel-AI: `excel_ai/core/plans/Status_1.9.10.md`.
+- ☐ Scenarios on the 468 MTInputs rows (layout; inputs are read by name): nothing to do unless a reader uses row numbers; new input `HealthBurdenMethodology` (not read). Distribution: the most-used cooking fuel is "n.a." for a country without WHOCooking data (Excel-AI M26): Coded CPAT already gives '' (no exemption; `distribution/incidence.py`), as legacy; nothing to do.
+
+### From Excel-AI 1.9.2 (2026-11-04)
+
+- ☑ Scenario set: scenario 4 (P3) is the carbon price \$50/tCO2 from 2027 (user: no ETS in the core scenarios; Package B, the ETS, is an extra of the Master's table only); `data/inputs/scenarios_excel_ai.csv` column 4 as the 1.1.0 set's scenario 6; `test_stored_outputs` compares scenario 4 with the 1.1.0 reference's scenario 6. The ETS path of the model is no longer tested by a stored scenario (only through the Excel-AI Master's ETS goal-seek test).
+- ☐ Prices_dom now has the full legacy column layout in tidy (`prices_domestic`: text info columns `mit.spsrc`, `mit.rpsrc` and the flags `mit.rprel`, `mit.taxa`); `DomesticData.value` reads a text as 0, as before: use the info columns if a method needs them.
+
+### From Excel-AI 1.9.0 (2026-11-03)
+
+- ☑ The 7 new rows ported ahead of the re-pin: effective carbon rate by sector (`ecr` by sector, `emissions.carbon_pricing`), interim averted deaths (`vsl`, `avd`, `welfare.step`; constant `VslGdpMult`); `variables.csv` rows added by hand; `test_rows_of_excel_ai_1_9_0` against `reference/excel_ai_1.9.0_new_rows.csv` (14 codes, scenarios 1-2, from the 1.9.0 build's stored runs): equal within 1e-9.
+- ◐ `variables.csv` re-extracted from 1.9.54 (1.9.54p2.0); the extra reference file of 1.9.0 is kept for its Public01 test.
+
+### From Excel-AI 1.7.0 (2026-11-03)
+
+- ☑ Scenario set: `data/inputs/scenarios_excel_ai.csv` written from 1.7.0's tab Scenarios (the four core scenarios 1-4: BASE, P1 \$20, P2 Package A, P3 Package B; was six; 1.9.2: P3 \$50); `test_stored_outputs` compares them with the 1.1.0 reference's numbers 1, 3, 4, 5; `test_foundations` expects 1-4. pytest 69 passed.
+- ☒ Re-pin `EXCEL_AI_VERSION` to 1.7.0: superseded (pinned to 1.9.54, 2026-11-15).
 
 ### From Excel-AI 1.3.0 (2026-10-31) and 1.4.0 (2026-11-01; Coded CPAT 1.3.1p1.5)
 
@@ -772,9 +986,9 @@ Status key: ☐ not started · ◐ in progress · ☑ done · ☒ closed without
 
 - ☑ D1-D16 decided by the user (2026-10-29): spec section 10; `NORMS.md` rules made final.
 - ☑ Detailed plan: spec section 11 (the tasks below, each with its check).
-- ☐ Correct `../QuickStart.docx` when it is next regenerated: the data are now edition Public01 (`../data/Public01/`): the public tables, and the six proprietary tables perturbed within +-3% (user 2026-10-30; the earlier wording, every table dummy or four proprietary tables, no longer holds).
+- ☑ (2026-11-03: `docs/QuickStart.md` section 4 says so; the .docx regenerated) Correct `../QuickStart.docx` when it is next regenerated: the data are now edition Public01 (`../data/Public01/`): the public tables, and the six proprietary tables perturbed within +-3% (user 2026-10-30; the earlier wording, every table dummy or four proprietary tables, no longer holds).
 - ☐ Send the documentation bugs DOC1-DOC20 (`../excel_ai/core/BUGS.md` section 3) to the CPAT team with the next tracker release. (Corrected in the website's methodology on 2026-10-31; its chapter Corrections lists them.)
-- ☑ (2026-10-31) Website: the book is the CPAT Python tab (`#python`), restructured to 2 chapters and 3 appendices (NORMS 8.5); deck permalink `../docs/presentations/03_Coded-CPAT_Overview_latest.pptx`.
+- ☑ (2026-10-31) Website: the book is the CPAT Python tab (`#python`), restructured to 2 chapters and 3 appendices (NORMS 8.5); deck permalink `../docs/presentations/03_CPAT-AI_Python_latest.pptx`.
 
 ### Phase 2 - Foundations (spec 11, phase 2)
 - ◐ 2.9 After the data rebuild (2026-10-30, `excel_ai/core/CAVEATS.md`): ☑ the scenario set and Excel-AI's stored values in `data/inputs/`; ☑ `legacy_comparison.py` reads `data/Public01/tidy/xai_legacy_cached_baseline.csv`; ☐ its legacy 456 workbook: port to the new legacy workbook when it comes (user 2026-10-30).
