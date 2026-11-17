@@ -1,9 +1,10 @@
-// Two decks (user 2026-11-17: "simplify and update the slide decks"):
-//   07_CPAT-AI_UserGuide_latest.pptx       the simplified user guide: folders, activating CPAT, working with Claude
+// The three decks of docs/presentations/ (user 2026-11-17: "simplify and update the slide decks"; the only decks the documents refer to):
+//   01_CPAT-AI_UserGuide_latest.pptx       the simplified user guide: folders, activating CPAT, working with Claude
 //                                          and GitHub Copilot, push and pull, credits, bugs/issues/norms, key files,
 //                                          modules, where the latest CPAT is, example prompts
-//   08_CPAT-AI_Excel_PitchGuide_latest.pptx the pitch and guide to CPAT-AI Excel, for the new interface (2.0.0): tabs,
+//   02_CPAT-AI_Excel_latest.pptx           the pitch and guide to CPAT-AI Excel, for the new interface (2.0.0): tabs,
 //                                          the User-defined page, Dashboard, Comparison, Climate and Macro-Fiscal
+//   03_CPAT-AI_Python_latest.pptx          CPAT-AI Python (Coded CPAT): status, how it works, testing, the app
 // Screenshots in img/: the workbook views are renders of the public-data release CPAT_v1.9.58 (edition Default, no
 // proprietary values; same layout as 2.0.0) printed by LibreOffice; the Copilot screens are from GitHub's
 // "GitHub Copilot app for Beginners" (MIT License), as in repo-tools/AI_Tools_Quick_Start.pptx.

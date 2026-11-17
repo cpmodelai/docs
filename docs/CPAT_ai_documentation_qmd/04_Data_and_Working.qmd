@@ -49,7 +49,7 @@ The project works under written norms (`excel_ai/core/NORMS.md`). They bind peop
 | `Legacy_CPAT_Bugs_v<version>.docx` | `excel_ai/bugs_and_legacy/` | The legacy bugs, with every cell-level fix plan |
 | `Tracking_Legacy_Bugs_v<version>.xlsx` | `excel_ai/bugs_and_legacy/` | The master list of bugs and issues |
 | `CPAT-AI_CodesMap_v<version>.xlsx` | `excel_ai/core/` | The code protocol, vocabularies, variables, output codes and every input |
-| `CPAT-AI_Overview_v<version>.pptx` | `excel_ai/` | The slide deck: status, how to use it, results (latest copy: `docs/presentations/01_CPAT-AI_Overview_latest.pptx`; the short pitch: `docs/presentations/04_CPAT-AI_Pitch_latest.pptx`) |
+| `02_CPAT-AI_Excel_latest.pptx` | `docs/presentations/` | The CPAT-AI Excel deck: pitch and guide (with the user guide 01 and the Python deck 03 beside it) |
 | `BUGS.md`, `ISSUES.md`, `NORMS.md`, `TODO.md`, `CAVEATS.md` | `excel_ai/core/` | The bug and issue lists, the rules, the open work, the task log |
 
 - **Older versions** of the documents move to `excel_ai/bugs_and_legacy/register/releases/` (the deck's to `excel_ai/mitigation/releases/`) when a new version is written (`excel_ai/core/tools/release.py`).
@@ -86,7 +86,7 @@ A methodology describes the method as it is now, for a reader who has never seen
 | Folder | Contents |
 |---|---|
 | `docs/index.html` | The website ([https://cpmodelai.github.io/docs/](https://cpmodelai.github.io/docs/)): Home, then four tabs: Methodology (`#methodology`), CPAT-AI Model (`#model`, the model shared by Excel-AI and Python), CPAT Excel-AI (`#excel-ai`, this book) and CPAT Python (`#python`) |
-| `docs/presentations/` | The latest version of each slide deck, numbered, as `<nn>_<Name>_latest.pptx` (permalinks) |
+| `docs/presentations/` | The three slide decks: 01 user guide, 02 CPAT-AI Excel, 03 CPAT-AI Python (permalinks); earlier decks in `archive/` |
 | `docs/CPAT_full_documentation_qmd/`, `docs/CPAT_full_documentation_html/` | The methodology (CPAT documentation): Quarto sources and built pages |
 | `docs/CPAT_ai_documentation_qmd/`, `docs/CPAT_ai_documentation_html/` | This documentation: Quarto sources and built pages |
 | `docs/CPAT_model_documentation_qmd/`, `docs/CPAT_model_documentation_html/` | CPAT-AI Model: the method of every block, with equations and pseudocode, written by hand; the equation list (appendices) generated from `coded/cpat_documentation/equations/equations.yaml` |

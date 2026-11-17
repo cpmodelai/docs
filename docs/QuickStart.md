@@ -33,7 +33,6 @@ Paths are relative to the repository root. Files named `_v<version>` carry the c
 | `docs/presentations/02_CPAT-AI_Excel_latest.pptx` | CPAT-AI Excel: the pitch and a guide to the 2.0 interface and its dashboards. |
 | `docs/presentations/03_CPAT-AI_Python_latest.pptx` | CPAT-AI Python (Coded CPAT): status, how it works, testing, the app. |
 | `docs/presentations/archive/` | The earlier decks (consolidated, overview, pitch, setup, Coded CPAT, AI climate-fiscal tools), retired 2026-11-17. |
-| `other/presentations/AIClimate-FiscalTools_v2.6.pptx` | The overarching deck on the team's AI climate-fiscal tools, CPAT-AI among them. |
 
 ## Computer-readable files
 
@@ -204,7 +203,7 @@ Getting set up and a short guide to git are in `other/SetupGuide.docx`. In short
 - Folder map: `README.md` (root) and `excel_ai/README.md`; each module folder has its own README.
 - Documentation: the website <https://cpmodelai.github.io/docs/> (sources in `docs/`).
 - How-to guides: the setup and tools guide `other/SetupGuide.docx`; the quick start in the mitigation Documentation; the data editions and scripts in `data/README.md`; module guides and prompts in `excel_ai/core/prompts/`.
-- Supporting material in `other/`: research papers, decks (`other/presentations/`), distribution notes and earlier prototypes.
+- Supporting material in `other/`: research papers, distribution notes and earlier prototypes.
 - Plans: `excel_ai/core/plans/` (e.g. `Modules.md` for the modular design).
-- Python model (Coded CPAT): `coded/README.md` (`run_model.py`, the Shiny app `app.py`, tests in `coded/cpat_testing/`), its deck and the Coded CPAT tab of the website.
+- Python model (Coded CPAT): `coded/README.md` (`run_model.py`, the Shiny app `app.py`, tests in `coded/cpat_testing/`), the deck `docs/presentations/03_CPAT-AI_Python_latest.pptx` and the CPAT Python tab of the website.
 - Personal working folders: `users/`.
