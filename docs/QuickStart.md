@@ -18,7 +18,7 @@ Paths are relative to the repository root. Files named `_v<version>` carry the c
 |---|---|
 | `QuickStart.docx` | This guide (root folder). |
 | `excel_ai/master/CPAT-AI-MT_latest.xlsm` | The MT, Multiscenario Tool (the Master workbook; 1.9.5, was `CPAT-AI-Master_UserGuide_latest.xlsm`; Activate all saves it into `excel_ai/active_workbooks/` as `CPAT-AI-MT.xlsb`, your working copy): every macro. Tab Dashboard: Run scenarios, the countries and scenarios to run, the status, the results at a glance; tab Activation and Macros: Activate all with its settings (Live scenarios, Last year, Formulas), Update data with its settings, Real data (proprietary): the copy of the real data tables from the legacy CPAT into the activated workbook (1.9.11; log on tab Real data log), and the other macros, each explained. |
-| `excel_ai/mitigation/docs/Documentation.md` | The guide to the mitigation module: what it is, quick start through the Master, how it works section by section, results, limits (also chapter 2 of the website's Excel-AI tab; Word copy `CPAT-AI-Mitigation_Documentation.docx`). |
+| `excel_ai/mitigation/docs/Documentation.md` | The guide to the mitigation module: what it is, quick start through the Master, how it works section by section, results, limits (also chapter 2 of the website's Excel-AI tab). |
 | `excel_ai/mitigation/docs/CPAT-AI-Mitigation_Methods.docx` | Methods volume: one chapter per block, with equations. |
 | `excel_ai/bugs_and_legacy/Tracking_Legacy_Bugs_v<version>.xlsx` | **The master list of bugs and issues**, every module, with the CPAT team's own tabs. |
 | `excel_ai/bugs_and_legacy/Legacy_CPAT_Bugs_v<version>.docx` | Every legacy bug found, with its cell-level fix plan for legacy CPAT. |
@@ -29,6 +29,7 @@ Paths are relative to the repository root. Files named `_v<version>` carry the c
 
 | **Deck** | **What it is for** |
 |---|---|
+| `docs/presentations/00_CPAT-AI_CountryWork_latest.pptx` | **Country teams start here.** How to use CPAT and the MT for country work: where to get it, the three folders (master, active_workbooks, published_cpat), activating, slicing CPAT for one country, scenarios, settings, the MT and its macros (non-technical). |
 | `docs/presentations/01_CPAT-AI_UserGuide_latest.pptx` | **Start here.** The user guide: the repository, the latest CPAT, developing with Claude and GitHub Copilot, pushing and pulling, bugs, issues and norms, example prompts. |
 | `docs/presentations/02_CPAT-AI_Excel_latest.pptx` | CPAT-AI Excel: the pitch and a guide to the 2.0 interface and its dashboards. |
 | `docs/presentations/03_CPAT-AI_Python_latest.pptx` | CPAT-AI Python (Coded CPAT): status, how it works, testing, the app. |
